@@ -1,42 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>wwwtriplew</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  /assets/style.css
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Andrew Wu | Computer Science & AI</title>
+  assets/css/style.css
+  <style>
+    /* Minimal CSS for layout */
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; color: #333; }
+    header { background: #111; color: #fff; padding: 1rem; text-align: center; }
+    nav a { color: #fff; margin: 0 1rem; text-decoration: none; font-weight: bold; }
+    .hero { padding: 4rem 2rem; text-align: center; background: #f5f5f5; }
+    .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.2rem; color: #555; }
+    .section { padding: 2rem; max-width: 900px; margin: auto; }
+    .project-card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .btn { display: inline-block; padding: 0.8rem 1.2rem; background: #0078d7; color: #fff; border-radius: 4px; text-decoration: none; }
+    footer { text-align: center; padding: 1rem; background: #111; color: #fff; }
+  </style>
 </head>
 <body>
   <header>
-    <h1>wwwtriplew</h1>
-    <p>Home of PiperLove — my online chess engine (coming soon)</p>
     <nav>
-      /piperlove/PiperLove</a> |
-      /blog/first-post.htmlDev Log</a>
+      /Home</a>
+      /piperlove/index.htmlProjects</a>
+      /piperlove/play.htmlPlay PiperLove</a>
+      /blog/first-post.htmlBlog</a>
+      /contact.htmlContact</a>
     </nav>
   </header>
 
-  <main>
-    <section class="card">
-      <h2>About</h2>
-      <p>This is my project hub. PiperLove is a competitive chess engine with custom evaluation and efficient move generation. Online matches and API will be added later.</p>
-    </section>
+  <section class="hero">
+    <h1>Andrew Wu</h1>
+    <p>Aspiring Computer Scientist | AI Enthusiast | Chess Engine Developer</p>
+  </section>
 
-    <section class="card">
-      <h2>Status</h2>
-      <ul>
-        <li>Evaluation: near completion</li>
-        <li>Move generation: near completion</li>
-        <li>Search: pending integration</li>
-      </ul>
-    </section>
+  <section class="section">
+    <h2>About Me</h2>
+    <p>I’m a high school student passionate about algorithms, AI, and building things that matter. My biggest project so far is PiperLove, a competitive chess engine designed from scratch in Python.</p>
+  </section>
 
-    <section class="card">
-      <h2>Play Online</h2>
-      <p>/piperlove/play.htmlComing Soon</a></p>
-    </section>
-  </main>
+  <section class="section">
+    <h2>Featured Project</h2>
+    <div class="project-card">
+      <h3>PiperLove Chess Engine</h3>
+      <p>PiperLove is my self-built chess engine featuring custom evaluation and move generation logic. Search algorithm is in progress, aiming for competitive strength.</p>
+      /piperlove/play.htmlPlay Now</a>
+    </div>
+  </section>
 
-  <footer>© wwwtriplew — PiperLove</footer>
+  <section class="section">
+    <h2>Latest Blog Post</h2>
+    <p>first-post.htmlRead: My Journey Building PiperLove</a></p>
+  </section>
+
+  <footer>
+    <p>© 2025 Andrew Wu | /wwwtriplew.me</p>
+    <p>GitHub | LinkedIn | Email</p>
+  </footer>
 </body>
 </html>
