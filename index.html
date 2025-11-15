@@ -4,42 +4,39 @@
   <meta charset="utf-8">
   <title>wwwtriplew</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; }
-    header { padding: 64px 24px; text-align: center; background: #0f172a; color: white; }
-    main { max-width: 800px; margin: 0 auto; padding: 24px; }
-    h1 { margin: 0 0 8px; }
-    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin: 16px 0; }
-    footer { text-align: center; color: #64748b; padding: 40px 0; }
-    .btn { display: inline-block; padding: 10px 16px; border-radius: 8px; background: #2563eb; color: white; text-decoration: none; }
-    .btn[disabled]{ opacity: .5; cursor: not-allowed; }
-  </style>
+  /assets/style.css
 </head>
 <body>
   <header>
     <h1>wwwtriplew</h1>
     <p>Home of PiperLove — my online chess engine (coming soon)</p>
+    <nav>
+      /piperlove/PiperLove</a> |
+      /blog/first-post.htmlDev Log</a>
+    </nav>
   </header>
+
   <main>
-    <section class="card" id="about">
+    <section class="card">
       <h2>About</h2>
-      <p>I’m building PiperLove, a competitive chess engine with custom evaluation and efficient move generation. Online matches and API will be added later.</p>
+      <p>This is my project hub. PiperLove is a competitive chess engine with custom evaluation and efficient move generation. Online matches and API will be added later.</p>
     </section>
 
-    <section class="card" id="piperlove">
-      <h2>PiperLove</h2>
-      <p>Status: evaluation &amp; move generation nearing completion; search to be integrated.</p>
-      <p><button class="btn" disabled>Play Online (coming soon)</button></p>
-    </section>
-
-    <section class="card" id="blog">
-      <h2>Dev Log</h2>
+    <section class="card">
+      <h2>Status</h2>
       <ul>
-        <li>[2025-11-15] Site initialized; domain &amp; SSL configured.</li>
-        <li>[2025-11-15] Engine: eval &amp; movegen near completion; search pending.</li>
+        <li>Evaluation: near completion</li>
+        <li>Move generation: near completion</li>
+        <li>Search: pending integration</li>
       </ul>
     </section>
+
+    <section class="card">
+      <h2>Play Online</h2>
+      <p>/piperlove/play.htmlComing Soon</a></p>
+    </section>
   </main>
+
   <footer>© wwwtriplew — PiperLove</footer>
 </body>
 </html>
