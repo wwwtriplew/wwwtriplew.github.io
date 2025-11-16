@@ -1,2 +1,102 @@
-<h1>Play PiperLove</h1>
-<p>Chessboard UI will be added here later.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play Piperlove | Chess Engine</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/Favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .play-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 4vw 3rem;
+      background: linear-gradient(180deg, #f0f5f2, var(--neutral));
+    }
+    .play-content {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 3rem;
+      border-radius: 1.75rem;
+      border: 1px solid rgba(29, 43, 36, 0.12);
+      box-shadow: 0 35px 70px var(--shadow);
+      text-align: center;
+    }
+    .chessboard-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 500px;
+      margin: 2rem auto;
+      background: linear-gradient(45deg, #b0c4c4 25%, #BAC8B1 25%, #BAC8B1 50%, #b0c4c4 50%, #b0c4c4 75%, #BAC8B1 75%);
+      background-size: 62.5px 62.5px;
+      border: 3px solid var(--text);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      font-size: 1.5rem;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+    .coming-soon {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      border: 2px dashed var(--action);
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" style="text-decoration: none; color: inherit;">
+      <span class="logo">wwwtriplew</span>
+    </a>
+    <nav>
+      <a href="../#profile">About</a>
+      <a href="../#piperlove">Project</a>
+      <a href="../#future">Future</a>
+    </nav>
+    <a class="pill" href="mailto:hello@wwwtriplew.me">Contact</a>
+  </header>
+
+  <main>
+    <div class="play-container">
+      <div class="play-content">
+        <p class="eyebrow">Interactive Chess</p>
+        <h1>Play Against Piperlove</h1>
+        <p>Challenge the engine in a live game with real-time analysis and move suggestions.</p>
+
+        <div class="chessboard-placeholder">
+          Chess UI Coming Soon
+        </div>
+
+        <div class="coming-soon">
+          <h3>🚧 Under Development</h3>
+          <p>The interactive chessboard interface is currently being built. It will feature:</p>
+          <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+            <li>✓ Drag-and-drop piece movement</li>
+            <li>✓ Real-time engine evaluation</li>
+            <li>✓ Move history and analysis</li>
+            <li>✓ Adjustable difficulty levels</li>
+            <li>✓ Opening book integration</li>
+          </ul>
+        </div>
+
+        <div class="panel-actions" style="justify-content: center; margin-top: 2rem;">
+          <a class="btn ghost" href="index.html">← Back to Piperlove</a>
+          <a class="btn ghost" href="../">← Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Andrew Wu · Piperlove · <a href="https://wwwtriplew.me">wwwtriplew.me</a>
+  </footer>
+</body>
+</html>

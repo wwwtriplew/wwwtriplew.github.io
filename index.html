@@ -1,63 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Andrew Wu | Computer Science & AI</title>
-  assets/css/style.css
-  <style>
-    /* Minimal CSS for layout */
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; color: #333; }
-    header { background: #111; color: #fff; padding: 1rem; text-align: center; }
-    nav a { color: #fff; margin: 0 1rem; text-decoration: none; font-weight: bold; }
-    .hero { padding: 4rem 2rem; text-align: center; background: #f5f5f5; }
-    .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-    .hero p { font-size: 1.2rem; color: #555; }
-    .section { padding: 2rem; max-width: 900px; margin: auto; }
-    .project-card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .btn { display: inline-block; padding: 0.8rem 1.2rem; background: #0078d7; color: #fff; border-radius: 4px; text-decoration: none; }
-    footer { text-align: center; padding: 1rem; background: #111; color: #fff; }
-  </style>
-</head>
-<body>
-  <header>
-    <nav>
-      /Home</a>
-      /piperlove/index.htmlProjects</a>
-      /piperlove/play.htmlPlay PiperLove</a>
-      /blog/first-post.htmlBlog</a>
-      /contact.htmlContact</a>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Andrew Wu · Piperlove</title>
+    <meta
+      name="description"
+      content="Andrew Wu's minimal portfolio with Piperlove, scroll-driven storytelling, and API experience."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/img/Favicon.svg" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <span class="logo">wwwtriplew</span>
+      <nav>
+        <a href="#profile">About</a>
+        <a href="#piperlove">Piperlove</a>
+        <a href="#future">Future</a>
+      </nav>
+      <a class="pill" href="mailto:hello@wwwtriplew.me">Contact</a>
+    </header>
 
-  <section class="hero">
-    <h1>wwwtriplew</h1>
-    <p>addicted to algorithm</p>
-  </section>
+    <main>
+      <section id="profile" class="panel reveal">
+        <img src="assets/img/bitmap-pigeon.png" alt="" class="section-bg-image" />
+        <img src="assets/img/bitmap-heart.png" alt="" class="section-corner-image section-corner-top-right" />
+        <img src="assets/img/bitmap-open-mouth-with-tongue.png" alt="" class="section-corner-image section-corner-bottom-left" />
+        <img src="assets/img/bitmap-fish.png" alt="" class="section-corner-image section-corner-left-center" />
+        <div class="panel-content">
+          <p class="eyebrow">About me</p>
+          <h1>Andrew Wu</h1>
+          <p>
+            High school technologist obsessed with graceful algorithms, bold design, and
+            performance computing. I build systems that feel crisp, human, and a little bit magical.
+          </p>
+          <p>
+            From chess engines to thoughtful interfaces, I prototype fast, iterate often, and write
+            about the learnings in public. Currently focused on making algorithm-powered chess analysis
+            accessible and building recommendation systems that understand player style.
+          </p>
+          <div class="panel-actions">
+            <a class="btn" href="blog/first-post.html">Read the Piperlove journal</a>
+            <a class="btn ghost" href="mailto:hello@wwwtriplew.me">Email me</a>
+          </div>
+        </div>
+      </section>
 
-  <section class="section">
-    <h2>About Me</h2>
-    <p>I’m a high school student passionate about algorithms, AI, and building things that matter. My biggest project so far is PiperLove, a competitive chess engine designed from scratch in Python.</p>
-    <p>Pypy and bitboard is used to increase speed!</p>
-  </section>
+      <section id="piperlove" class="panel reveal layer">
+        <img src="assets/img/bitmap-knight-chess.png" alt="" class="section-bg-image" />
+        <div class="panel-content">
+          <p class="eyebrow">Project Spotlight</p>
+          <h2>Piperlove Chess Engine</h2>
+          <p>
+            Piperlove is a self-built chess engine tuned for positional understanding and tactical precision. 
+            The engine is optimized for PyPy, leverages modern bitboards for lightning-fast move generation, 
+            and features a REST-based API that lets you request evaluations, candidate moves, and live analysis.
+          </p>
+          <ul class="stats">
+            <li><strong>Search Depth:</strong> 8 plies standard / experimental 10-12 ply rollout</li>
+            <li><strong>API Support:</strong> FEN, SAN notation, move lists, evaluation trends</li>
+            <li><strong>Performance:</strong> Sub-400ms response time with intelligent caching</li>
+            <li><strong>Features:</strong> Opening book, endgame tablebase integration, multi-threading</li>
+          </ul>
+          <div class="panel-actions">
+            <a class="btn" href="piperlove/index.html">Play Against Piperlove</a>
+            <a class="btn ghost" href="#api">Explore the API</a>
+          </div>
+        </div>
+      </section>
 
-  <section class="section">
-    <h2>Featured Project</h2>
-    <div class="project-card">
-      <h3>PiperLove Chess Engine</h3>
-      <p>PiperLove is my self-built chess engine who values positional advantage</p>
-      /piperlove/play.htmlPlay Now</a>
-    </div>
-  </section>
+      <section id="api" class="panel reveal">
+        <div class="panel-content">
+          <h3>Live API preview</h3>
+          <p>
+            Send a <strong>POST</strong> request to <code>https://wwwtriplew.me/api/piperlove/play</code> with a JSON body containing the following parameters:
+          </p>
+          <ul>
+            <li><code>fen</code> <em>(string, required)</em>: The FEN string representing the chess position.</li>
+            <li><code>depth</code> <em>(integer, required)</em>: The search depth for the engine.</li>
+          </ul>
+          <div class="api-card">
+            <div><strong>Example request body:</strong></div>
+            <pre><code>{
+  "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
+  "depth": 8
+}</code></pre>
+            <div><strong>Example response:</strong></div>
+            <pre><code>{
+  "bestMove": "e2e4",
+  "score": 0.23,
+  "pv": ["e2e4", "e7e5", "g1f3"]
+}</code></pre>
+            <ul>
+              <li><code>bestMove</code> <em>(string)</em>: The best move in UCI format.</li>
+              <li><code>score</code> <em>(number)</em>: Evaluation score from White's perspective (positive = White is better).</li>
+              <li><code>pv</code> <em>(array of strings, optional)</em>: Principal variation (best line found).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-  <section class="section">
-    <h2>Latest Blog Post</h2>
-    <p>first-post.htmlRead: My Journey Building PiperLove</a></p>
-  </section>
+      <section id="future" class="panel reveal dark">
+        <div class="panel-content">
+          <p class="eyebrow">What's Next</p>
+          <h2>Future Plans & Roadmap</h2>
+          <p>
+            I'm constantly pushing the boundaries of what Piperlove can do. Here's what's on the horizon
+            as I continue to blend classical chess algorithms with modern machine learning techniques.
+          </p>
+          <div class="grid">
+            <article>
+              <h3>🧠 NNUE Integration</h3>
+              <p>
+                Efficiently Updatable Neural Networks (NNUE) will bring neural network-based evaluation 
+                to Piperlove. By training on millions of positions, NNUE can provide lightning-fast, 
+                superhuman-level position assessment while maintaining the explainability of traditional engines.
+              </p>
+              <p style="margin-top: 0.75rem; font-size: 0.85rem;">
+                <strong>Goal:</strong> Boost evaluation accuracy by 200+ ELO points while keeping inference under 50ms.
+              </p>
+            </article>
+            <article>
+              <h3>🎯 Smart Recommendation System</h3>
+              <p>
+                Building a personalized chess training assistant that analyzes your playing style, identifies 
+                weaknesses, and recommends tailored puzzle sets, opening repertoires, and study positions. 
+                Using collaborative filtering and pattern recognition to create a truly adaptive learning experience.
+              </p>
+              <p style="margin-top: 0.75rem; font-size: 0.85rem;">
+                <strong>Goal:</strong> Help players improve faster with AI-curated, style-specific training plans.
+              </p>
+            </article>
+          </div>
+          <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.7); border-radius: 1rem; border: 1px solid rgba(29,43,36,0.15);">
+            <h3 style="margin-bottom: 0.75rem;">About Me</h3>
+            <p>
+              I'm a student developer passionate about the intersection of AI, algorithms, and user experience.
+              When I'm not coding, you'll find me analyzing chess games, reading about neural architectures,
+              or experimenting with new technologies. Always open to collaboration, feedback, and interesting discussions.
+            </p>
+          </div>
+          <div class="panel-actions">
+            <a class="btn" href="mailto:hello@wwwtriplew.me">Let's Connect</a>
+            <a class="btn ghost" href="https://github.com/wwwtriplew" target="_blank">View on GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
 
-  <footer>
-    <p>© 2025 Andrew Wu | /wwwtriplew.me</p>
-    <p>GitHub | LinkedIn | Email</p>
-  </footer>
-</body>
+    <footer>
+      © 2025 Andrew Wu · Piperlove · <a href="https://wwwtriplew.me">wwwtriplew.me</a>
+    </footer>
+
+    <div class="scroll-progress"></div>
+
+    <!-- Intro Audio -->
+    <audio id="intro-audio" preload="auto">
+      <source src="assets/audio/Intro.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+      // Play intro audio if autoplay is allowed
+      const introAudio = document.getElementById('intro-audio');
+      introAudio.play().catch(() => {
+        // Autoplay blocked by browser - do nothing
+      });
+
+      // Intersection Observer for reveal animations
+      const sections = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+      sections.forEach((section) => observer.observe(section));
+
+      // Scroll progress indicator
+      const progressBar = document.querySelector('.scroll-progress');
+      window.addEventListener('scroll', () => {
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.scrollY / windowHeight) * 100;
+        progressBar.style.width = scrolled + '%';
+      });
+
+      // Smooth scroll offset for fixed header
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            const offset = 80; // Height of fixed header
+            const targetPosition = target.offsetTop - offset;
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    </script>
+  </body>
 </html>

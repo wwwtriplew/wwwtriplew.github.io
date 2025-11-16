@@ -2,20 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>wwwtriplew</title>
-  assets/style.css
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Piperlove Chess Engine | wwwtriplew</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/Favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .piperlove-hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 4vw;
+      background: linear-gradient(180deg, #f0f5f2, var(--neutral));
+    }
+    .hero-content {
+      max-width: 800px;
+      text-align: center;
+    }
+    .hero-content h1 {
+      font-size: clamp(3rem, 6vw, 5rem);
+      margin-bottom: 1.5rem;
+    }
+    .hero-content p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(29, 43, 36, 0.12);
+      text-align: left;
+    }
+    .feature-card h3 {
+      margin-bottom: 1rem;
+      color: var(--action);
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to wwwtriplew</h1>
+  <header class="site-header">
+    <a href="../" style="text-decoration: none; color: inherit;">
+      <span class="logo">wwwtriplew</span>
+    </a>
     <nav>
-      /piperlove/PiperLove</a> |
-      /blog/Blog</a>
+      <a href="../#profile">About</a>
+      <a href="../#piperlove">Project</a>
+      <a href="../#future">Future</a>
     </nav>
+    <a class="pill" href="mailto:hello@wwwtriplew.me">Contact</a>
   </header>
-  <main>
-    <h2>About This Site</h2>
-    <p>This is my hub for projects. PiperLove, my chess engine, is coming soon!</p>
+
+  <main style="padding-top: 0;">
+    <section class="piperlove-hero" style="position: relative; overflow: hidden;">
+      <img src="../assets/img/bitmap-knight-chess.png" alt="" class="section-bg-image" />
+      <div class="hero-content" style="position: relative; z-index: 1;">
+        <h1>Piperlove</h1>
+        <p>A self-built chess engine combining classical algorithms with modern architecture for precise, lightning-fast analysis.</p>
+        
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>⚡ Performance</h3>
+            <p>8-ply search depth with sub-400ms response times. Optimized bitboard representation and move generation.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🎯 Precision</h3>
+            <p>Tuned evaluation function balancing material, position, mobility, and king safety for strong tactical play.</p>
+          </div>
+          <div class="feature-card">
+            <h3>🔌 API Ready</h3>
+            <p>RESTful API supporting FEN notation, move analysis, and real-time evaluation for seamless integration.</p>
+          </div>
+        </div>
+
+        <div class="panel-actions" style="justify-content: center; margin-top: 2rem;">
+          <a class="btn" href="play.html">Play Now</a>
+          <a class="btn ghost" href="../#api">View API Docs</a>
+          <a class="btn ghost" href="../">← Back to Home</a>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    © 2025 Andrew Wu · Piperlove · <a href="https://wwwtriplew.me">wwwtriplew.me</a>
+  </footer>
 </body>
 </html>
