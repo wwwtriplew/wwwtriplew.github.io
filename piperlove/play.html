@@ -7,7 +7,7 @@
   <link rel="icon" href="assets/img/pied-piper-pp.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/js/chess-engine.js?v=4"></script>
+  <script src="../assets/js/chess-engine.js?v=5"></script>
   <style>
     .play-container {
       min-height: 100vh;
@@ -689,7 +689,7 @@
       updateGameInfo();
       
       gameState.isPlayerTurn = false;
-      updateStatus('Piperlove is thinking...', true);
+      updateStatus('Piperlove is thinking... (first move may take 30+ seconds due to server cold start)', true);
       
       setTimeout(() => requestEngineMove(), 500);
     }
@@ -700,7 +700,7 @@
         const fen = boardToFEN();
         const thinkingTime = 8000; // 8 seconds - gives engine more time
         
-        console.log(`Requesting move: thinking=${thinkingTime}ms, timeout=${thinkingTime + 10000}ms`);
+        console.log(`Requesting move: thinking=${thinkingTime}ms, timeout=${thinkingTime + 30000}ms`);
         const startTime = Date.now();
         
         const result = await ChessEngine.getMove(fen, thinkingTime);
