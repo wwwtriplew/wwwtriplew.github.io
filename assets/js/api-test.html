@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Engine API Test</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1e1e1e;
+      color: #d4d4d4;
+    }
+    button {
+      background: #4ec9b0;
+      color: #1e1e1e;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #6ed9c0;
+    }
+    .output {
+      background: #252526;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+    }
+    .success { color: #4ec9b0; }
+    .error { color: #f48771; }
+    .info { color: #dcdcaa; }
+  </style>
+</head>
+<body>
+  <h1>🎮 Piperlove Chess Engine API Test</h1>
+  <p>API Endpoint: <code>https://pipier-love-api.vercel.app</code></p>
+  
+  <div>
+    <button onclick="testHealth()">Test Health Check</button>
+    <button onclick="testStartingPosition()">Test Starting Position</button>
+    <button onclick="testAfterE4()">Test After 1.e4</button>
+    <button onclick="clearOutput()">Clear Output</button>
+  </div>
+  
+  <div id="output" class="output">Click a button to test the API...</div>
+
+  <script src="chess-engine.js"></script>
+  <script>
+    const output = document.getElementById('output');
+    
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const line = `[${timestamp}] ${message}\n`;
+      output.innerHTML += `<span class="${type}">${line}</span>`;
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    function clearOutput() {
+      output.innerHTML = 'Output cleared.\n';
+    }
+    
+    async function testHealth() {
+      log('Testing API health check...', 'info');
+      const startTime = Date.now();
+      
+      try {
+        const isHealthy = await ChessEngine.checkHealth();
+        const duration = Date.now() - startTime;
+        
+        if (isHealthy) {
+          log(`✓ API is online and healthy (${duration}ms)`, 'success');
+        } else {
+          log(`✗ API health check failed (${duration}ms)`, 'error');
+        }
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    }
+    
+    async function testStartingPosition() {
+      log('Testing engine with starting position...', 'info');
+      const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+      const startTime = Date.now();
+      
+      try {
+        const result = await ChessEngine.getMove(fen, 2000);
+        const duration = Date.now() - startTime;
+        
+        if (result.success) {
+          log(`✓ Engine responded in ${duration}ms`, 'success');
+          log(`  Move: ${result.move}`, 'info');
+          log(`  Score: ${result.score} centipawns`, 'info');
+          log(`  Depth: ${result.depth} plies`, 'info');
+          log(`  Nodes: ${result.nodes.toLocaleString()}`, 'info');
+          log(`  NPS: ${result.nps.toLocaleString()}`, 'info');
+          if (result.pv) {
+            log(`  PV: ${result.pv}`, 'info');
+          }
+        } else {
+          log(`✗ Engine error: ${result.error}`, 'error');
+        }
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    }
+    
+    async function testAfterE4() {
+      log('Testing engine after 1.e4...', 'info');
+      const fen = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
+      const startTime = Date.now();
+      
+      try {
+        const result = await ChessEngine.getMove(fen, 2000);
+        const duration = Date.now() - startTime;
+        
+        if (result.success) {
+          log(`✓ Engine responded in ${duration}ms`, 'success');
+          log(`  Move: ${result.move}`, 'info');
+          log(`  Score: ${result.score} centipawns`, 'info');
+          log(`  Depth: ${result.depth} plies`, 'info');
+          log(`  Nodes: ${result.nodes.toLocaleString()}`, 'info');
+          log(`  NPS: ${result.nps.toLocaleString()}`, 'info');
+          if (result.pv) {
+            log(`  PV: ${result.pv}`, 'info');
+          }
+        } else {
+          log(`✗ Engine error: ${result.error}`, 'error');
+        }
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+      }
+    }
+    
+    log('API Test Page Ready', 'success');
+    log('Note: First request may be slow (cold start)', 'info');
+  </script>
+</body>
+</html>
