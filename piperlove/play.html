@@ -7,7 +7,7 @@
   <link rel="icon" href="assets/img/pied-piper-pp.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/js/chess-engine.js"></script>
+  <script src="../assets/js/chess-engine.js?v=2"></script>
   <style>
     .play-container {
       min-height: 100vh;
@@ -700,8 +700,13 @@
         const fen = boardToFEN();
         const thinkingTime = 3000; // 3 seconds - balanced speed vs strength
         
+        console.log(`Requesting move: thinking=${thinkingTime}ms, timeout=${thinkingTime + 5000}ms`);
+        const startTime = Date.now();
+        
         const result = await ChessEngine.getMove(fen, thinkingTime);
         
+        const elapsed = Date.now() - startTime;
+        console.log(`Engine responded in ${elapsed}ms`);
         if (result.success) {
           executeEngineMove(result.move, result.promotion);
           

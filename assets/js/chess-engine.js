@@ -17,7 +17,12 @@ const ChessEngine = {
       // Add timeout buffer (thinking time + 5 seconds for network/overhead)
       const timeoutMs = thinkingTime + 5000;
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      const timeoutId = setTimeout(() => {
+        console.warn(`⏱️ Request timeout after ${timeoutMs}ms - aborting...`);
+        controller.abort();
+      }, timeoutMs);
+      
+      console.log(`🚀 Sending request to engine: thinking=${thinkingTime}ms, timeout=${timeoutMs}ms`);
       
       const response = await fetch(`${this.API_URL}/move`, {
         method: 'POST',
