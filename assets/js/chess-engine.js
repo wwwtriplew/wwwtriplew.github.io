@@ -23,27 +23,42 @@ const ChessEngine = {
       }, timeoutMs);
       
       console.log(`🚀 Sending request to engine: thinking=${thinkingTime}ms, timeout=${timeoutMs}ms`);
+      console.log(`📋 FEN: ${fen}`);
+      
+      const requestBody = {
+        fen: fen,
+        ai_thinking_ms: Math.max(100, Math.min(60000, thinkingTime))
+      };
+      console.log(`📤 Request body:`, requestBody);
       
       const response = await fetch(`${this.API_URL}/move`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          fen: fen,
-          ai_thinking_ms: Math.max(100, Math.min(60000, thinkingTime))
-        }),
+        body: JSON.stringify(requestBody),
         signal: controller.signal
       });
 
       clearTimeout(timeoutId);
+      
+      console.log(`✅ Response received: status=${response.status}`);
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
+        const errorText = await response.text();
+        console.error(`❌ API Error Response:`, errorText);
+        let error;
+        try {
+          error = JSON.parse(errorText);
+        } catch {
+          error = { detail: errorText };
+        }
         throw new Error(error.detail || `API error: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log(`📥 Engine response:`, data);
+      
       return {
         success: true,
         move: data.move,        // UCI format: "e2e4" or "e7e8q"
