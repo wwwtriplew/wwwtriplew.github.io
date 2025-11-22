@@ -199,6 +199,40 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
     }
+    .promotion-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .promotion-modal.active {
+      display: flex;
+    }
+    .promotion-choices {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      display: flex;
+      gap: 1rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .promotion-piece {
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      padding: 0.5rem;
+      border: 2px solid transparent;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .promotion-piece:hover {
+      border-color: var(--action);
+      background: rgba(123, 150, 105, 0.1);
+      transform: scale(1.1);
+    }
     @media (max-width: 968px) {
       .chess-layout {
         grid-template-columns: 1fr;
@@ -274,6 +308,15 @@
     </div>
   </main>
 
+  <div id="promotionModal" class="promotion-modal">
+    <div class="promotion-choices">
+      <img src="../assets/chessBoardUI/wQ.svg" class="promotion-piece" onclick="promotePawn('Q')" alt="Queen">
+      <img src="../assets/chessBoardUI/wR.svg" class="promotion-piece" onclick="promotePawn('R')" alt="Rook">
+      <img src="../assets/chessBoardUI/wB.svg" class="promotion-piece" onclick="promotePawn('B')" alt="Bishop">
+      <img src="../assets/chessBoardUI/wN.svg" class="promotion-piece" onclick="promotePawn('N')" alt="Knight">
+    </div>
+  </div>
+
   <footer>
     © 2025 Andrew Wu · Piperlove · <a href="https://wwwtriplew.me">wwwtriplew.me</a>
   </footer>
@@ -302,8 +345,10 @@
       legalMoves: [],
       moveHistory: [],
       isPlayerTurn: true,
+      playerColor: 'white',
       flipped: false,
-      lastMove: null
+      lastMove: null,
+      pendingPromotion: null
     };
 
     // Initialize board
@@ -420,8 +465,8 @@
         }
       }
       
-      // Select piece
-      if (piece && isPlayerPiece(piece)) {
+      // Select piece (only if it's player's piece)
+      if (piece && isPlayerPiece(piece, gameState.playerColor)) {
         selectSquare(displayRow, displayCol);
       } else {
         deselectSquare();
@@ -582,8 +627,12 @@
       return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
-    function isPlayerPiece(piece) {
-      return piece === piece.toUpperCase(); // White pieces
+    function isPlayerPiece(piece, playerColor) {
+      if (playerColor === 'white') {
+        return piece === piece.toUpperCase();
+      } else {
+        return piece === piece.toLowerCase();
+      }
     }
 
     function isOpponentPiece(piece, isWhite) {
@@ -592,22 +641,43 @@
 
     // Make move
     function makeMove(from, to) {
+      if (!gameState.isPlayerTurn) return;
+      
       const [fromRow, fromCol] = from;
       const [toRow, toCol] = to;
       
       const piece = gameState.board[fromRow][fromCol];
       const captured = gameState.board[toRow][toCol];
       
-      // Execute move
-      gameState.board[toRow][toCol] = piece;
+      // Check for pawn promotion
+      if (piece && piece.toLowerCase() === 'p') {
+        const isWhitePawn = piece === 'P';
+        const promotionRow = isWhitePawn ? 0 : 7;
+        
+        if (toRow === promotionRow) {
+          gameState.pendingPromotion = { from, to, piece, captured };
+          showPromotionModal();
+          return;
+        }
+      }
+      
+      executeMoveInternal(from, to, piece, captured);
+    }
+    
+    function executeMoveInternal(from, to, piece, captured, promotionPiece = null) {
+      const [fromRow, fromCol] = from;
+      const [toRow, toCol] = to;
+      
+      const finalPiece = promotionPiece || piece;
+      
+      gameState.board[toRow][toCol] = finalPiece;
       gameState.board[fromRow][fromCol] = null;
       
-      // Update state
       gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
       gameState.moveHistory.push({
         from: [fromRow, fromCol],
         to: [toRow, toCol],
-        piece,
+        piece: finalPiece,
         captured,
         fen: boardToFEN()
       });
@@ -616,11 +686,9 @@
       updateMoveList();
       updateGameInfo();
       
-      // Switch turn
       gameState.isPlayerTurn = false;
       updateStatus('Piperlove is thinking...', true);
       
-      // Call engine
       setTimeout(() => requestEngineMove(), 500);
     }
 
@@ -773,6 +841,13 @@
       }
       
       const img = e.target;
+      const piece = img.dataset.piece;
+      
+      if (!isPlayerPiece(piece, gameState.playerColor)) {
+        e.preventDefault();
+        return;
+      }
+      
       const square = img.parentElement;
       const row = parseInt(square.dataset.row);
       const col = parseInt(square.dataset.col);
@@ -817,6 +892,27 @@
       }
     }
 
+    // Promotion functions
+    function showPromotionModal() {
+      document.getElementById('promotionModal').classList.add('active');
+    }
+    
+    function hidePromotionModal() {
+      document.getElementById('promotionModal').classList.remove('active');
+    }
+    
+    function promotePawn(pieceType) {
+      if (!gameState.pendingPromotion) return;
+      
+      const { from, to, piece, captured } = gameState.pendingPromotion;
+      const isWhite = piece === piece.toUpperCase();
+      const promotedPiece = isWhite ? pieceType.toUpperCase() : pieceType.toLowerCase();
+      
+      hidePromotionModal();
+      executeMoveInternal(from, to, piece, captured, promotedPiece);
+      gameState.pendingPromotion = null;
+    }
+    
     // Control functions
     function resetGame() {
       gameState = {
@@ -826,10 +922,13 @@
         legalMoves: [],
         moveHistory: [],
         isPlayerTurn: true,
+        playerColor: gameState.playerColor,
         flipped: gameState.flipped,
-        lastMove: null
+        lastMove: null,
+        pendingPromotion: null
       };
       
+      hidePromotionModal();
       parseFEN(gameState.fen);
       renderBoard();
       updateMoveList();
