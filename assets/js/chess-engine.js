@@ -14,6 +14,11 @@ const ChessEngine = {
    */
   async getMove(fen, thinkingTime = 15000) {
     try {
+      // Add timeout buffer (thinking time + 5 seconds for network/overhead)
+      const timeoutMs = thinkingTime + 5000;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      
       const response = await fetch(`${this.API_URL}/move`, {
         method: 'POST',
         headers: {
@@ -22,8 +27,11 @@ const ChessEngine = {
         body: JSON.stringify({
           fen: fen,
           ai_thinking_ms: Math.max(100, Math.min(60000, thinkingTime))
-        })
+        }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
@@ -42,6 +50,13 @@ const ChessEngine = {
         pv: data.pv            // Principal variation
       };
     } catch (error) {
+      if (error.name === 'AbortError') {
+        console.error('Chess engine timeout - request took too long');
+        return {
+          success: false,
+          error: 'Request timeout - engine took too long to respond'
+        };
+      }
       console.error('Chess engine error:', error);
       return {
         success: false,

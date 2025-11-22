@@ -698,7 +698,7 @@
     async function requestEngineMove() {
       try {
         const fen = boardToFEN();
-        const thinkingTime = 2000; // 2 seconds
+        const thinkingTime = 3000; // 3 seconds - balanced speed vs strength
         
         const result = await ChessEngine.getMove(fen, thinkingTime);
         
@@ -723,8 +723,9 @@
         }
       } catch (error) {
         console.error('Engine error:', error);
-        updateStatus('Engine error - your turn (click to retry)', false);
+        updateStatus(`⚠ ${error.message || 'Engine error'} - Your turn`, false);
         gameState.isPlayerTurn = true;
+        renderBoard();
       }
     }
 
