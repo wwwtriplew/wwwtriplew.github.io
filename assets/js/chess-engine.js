@@ -14,8 +14,8 @@ const ChessEngine = {
    */
   async getMove(fen, thinkingTime = 15000) {
     try {
-      // Add timeout buffer (thinking time + 5 seconds for network/overhead)
-      const timeoutMs = thinkingTime + 5000;
+      // Add timeout buffer (thinking time + 10 seconds for network/overhead)
+      const timeoutMs = thinkingTime + 10000;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
         console.warn(`⏱️ Request timeout after ${timeoutMs}ms - aborting...`);
