@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Play Piperlove | Chess Engine</title>
   <link rel="icon" href="assets/img/pied-piper-pp.ico" />
-  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
   <style>
     .play-container {
       min-height: 100vh;
@@ -16,38 +17,195 @@
       background: linear-gradient(180deg, #f0f5f2, var(--neutral));
     }
     .play-content {
-      max-width: 900px;
+      max-width: 1100px;
       width: 100%;
       background: rgba(255, 255, 255, 0.9);
-      padding: 3rem;
+      padding: 2rem;
       border-radius: 1.75rem;
       border: 1px solid rgba(29, 43, 36, 0.12);
       box-shadow: 0 35px 70px var(--shadow);
-      text-align: center;
     }
-    .chessboard-placeholder {
+    .chess-layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+    }
+    .board-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .chessboard {
       width: 100%;
+      max-width: 560px;
       aspect-ratio: 1;
-      max-width: 500px;
-      margin: 2rem auto;
-      background: linear-gradient(45deg, #b0c4c4 25%, #BAC8B1 25%, #BAC8B1 50%, #b0c4c4 50%, #b0c4c4 75%, #BAC8B1 75%);
-      background-size: 62.5px 62.5px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
       border: 3px solid var(--text);
       border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .square {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text);
-      font-size: 1.5rem;
-      font-weight: 600;
-      opacity: 0.7;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
     }
-    .coming-soon {
+    .square.light {
+      background: #f0d9b5;
+    }
+    .square.dark {
+      background: #b58863;
+    }
+    .square.selected {
+      background: #baca44 !important;
+      box-shadow: inset 0 0 0 3px rgba(123, 150, 105, 0.7);
+    }
+    .square.legal-move::after {
+      content: '';
+      position: absolute;
+      width: 30%;
+      height: 30%;
+      background: rgba(123, 150, 105, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .square.legal-capture::after {
+      content: '';
+      position: absolute;
+      inset: 5%;
+      border: 4px solid rgba(123, 150, 105, 0.7);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .square.last-move {
+      background: rgba(186, 202, 68, 0.4) !important;
+    }
+    .piece {
+      width: 85%;
+      height: 85%;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.1s ease;
+    }
+    .piece:active {
+      cursor: grabbing;
+      transform: scale(1.1);
+    }
+    .piece.dragging {
+      opacity: 0.5;
+    }
+    .side-panel {
+      width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .info-card {
       background: rgba(255, 255, 255, 0.95);
-      padding: 1.5rem;
+      padding: 1.25rem;
       border-radius: 1rem;
-      border: 2px dashed var(--action);
-      margin: 2rem 0;
+      border: 1px solid rgba(29, 43, 36, 0.12);
+    }
+    .info-card h3 {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1rem;
+      color: var(--action);
+    }
+    .info-card p {
+      margin: 0.5rem 0;
+      font-size: 0.85rem;
+    }
+    .eval-bar-container {
+      height: 30px;
+      background: #1d2b26;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .eval-bar {
+      height: 100%;
+      background: #f0d9b5;
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .move-list {
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.8rem;
+      padding: 0.5rem;
+      background: rgba(29, 43, 36, 0.05);
+      border-radius: 0.5rem;
+    }
+    .move-item {
+      padding: 0.25rem 0;
+      color: var(--muted);
+    }
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: 2px solid var(--action);
+      background: var(--action);
+      color: white;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .controls button:hover {
+      background: #6a8358;
+      transform: translateY(-2px);
+    }
+    .controls button.secondary {
+      background: transparent;
+      color: var(--action);
+    }
+    .controls button.secondary:hover {
+      background: rgba(123, 150, 105, 0.1);
+    }
+    .status {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(123, 150, 105, 0.1);
+      border-radius: 0.5rem;
+      font-weight: 600;
+      color: var(--action);
+    }
+    .thinking {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @media (max-width: 968px) {
+      .chess-layout {
+        grid-template-columns: 1fr;
+      }
+      .side-panel {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -67,29 +225,50 @@
   <main>
     <div class="play-container">
       <div class="play-content">
-        <p class="eyebrow">Interactive Chess</p>
-        <h1>Play Against Piperlove</h1>
-        <p>Challenge the engine in a live game with real-time analysis and move suggestions.</p>
-
-        <div class="chessboard-placeholder">
-          Chess UI Coming Soon
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <p class="eyebrow">Interactive Chess</p>
+          <h1 style="margin-bottom: 0.5rem;">Play Against Piperlove</h1>
+          <p style="margin-top: 0;">Challenge the engine with drag-and-drop gameplay</p>
         </div>
 
-        <div class="coming-soon">
-          <h3>🚧 Under Development</h3>
-          <p>The interactive chessboard interface is currently being built. It will feature:</p>
-          <ul style="list-style: none; padding: 0; margin-top: 1rem;">
-            <li>✓ Drag-and-drop piece movement</li>
-            <li>✓ Real-time engine evaluation</li>
-            <li>✓ Move history and analysis</li>
-            <li>✓ Adjustable difficulty levels</li>
-            <li>✓ Opening book integration</li>
-          </ul>
-        </div>
+        <div class="chess-layout">
+          <div class="board-container">
+            <div id="chessboard" class="chessboard"></div>
+            <div class="status" id="status">Your turn - White to move</div>
+            <div class="controls">
+              <button onclick="resetGame()">New Game</button>
+              <button class="secondary" onclick="undoMove()">Undo Move</button>
+              <button class="secondary" onclick="flipBoard()">Flip Board</button>
+            </div>
+          </div>
 
-        <div class="panel-actions" style="justify-content: center; margin-top: 2rem;">
-          <a class="btn ghost" href="index.html">← Back to Piperlove</a>
-          <a class="btn ghost" href="../">← Home</a>
+          <div class="side-panel">
+            <div class="info-card">
+              <h3>Evaluation</h3>
+              <div class="eval-bar-container">
+                <div class="eval-bar" id="evalBar" style="width: 50%;">
+                  <span id="evalScore">0.0</span>
+                </div>
+              </div>
+              <p style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center;">
+                White advantage → | ← Black advantage
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>Move History</h3>
+              <div class="move-list" id="moveList">
+                <p style="text-align: center; color: var(--muted); font-size: 0.75rem;">No moves yet</p>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h3>Game Info</h3>
+              <p><strong>Depth:</strong> <span id="depth">8</span> plies</p>
+              <p><strong>Last Move:</strong> <span id="lastMove">-</span></p>
+              <p><strong>Moves:</strong> <span id="moveCount">0</span></p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -98,5 +277,595 @@
   <footer>
     © 2025 Andrew Wu · Piperlove · <a href="https://wwwtriplew.me">wwwtriplew.me</a>
   </footer>
-</body>
-</html>
+
+  <script>
+    // Chess game state
+    const PIECES = {
+      'K': { svg: '../assets/chessBoardUI/wK.svg', name: 'King' },
+      'Q': { svg: '../assets/chessBoardUI/wQ.svg', name: 'Queen' },
+      'R': { svg: '../assets/chessBoardUI/wR.svg', name: 'Rook' },
+      'B': { svg: '../assets/chessBoardUI/wB.svg', name: 'Bishop' },
+      'N': { svg: '../assets/chessBoardUI/wN.svg', name: 'Knight' },
+      'P': { svg: '../assets/chessBoardUI/wP.svg', name: 'Pawn' },
+      'k': { svg: '../assets/chessBoardUI/bK.svg', name: 'King' },
+      'q': { svg: '../assets/chessBoardUI/bQ.svg', name: 'Queen' },
+      'r': { svg: '../assets/chessBoardUI/bR.svg', name: 'Rook' },
+      'b': { svg: '../assets/chessBoardUI/bB.svg', name: 'Bishop' },
+      'n': { svg: '../assets/chessBoardUI/bN.svg', name: 'Knight' },
+      'p': { svg: '../assets/chessBoardUI/bP.svg', name: 'Pawn' }
+    };
+
+    let gameState = {
+      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      board: [],
+      selectedSquare: null,
+      legalMoves: [],
+      moveHistory: [],
+      isPlayerTurn: true,
+      flipped: false,
+      lastMove: null
+    };
+
+    // Initialize board
+    function initBoard() {
+      const board = document.getElementById('chessboard');
+      board.innerHTML = '';
+      
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          const square = document.createElement('div');
+          const isLight = (row + col) % 2 === 0;
+          square.className = `square ${isLight ? 'light' : 'dark'}`;
+          square.dataset.row = row;
+          square.dataset.col = col;
+          
+          square.addEventListener('click', handleSquareClick);
+          square.addEventListener('dragover', handleDragOver);
+          square.addEventListener('drop', handleDrop);
+          
+          board.appendChild(square);
+        }
+      }
+      
+      parseFEN(gameState.fen);
+      renderBoard();
+    }
+
+    // Parse FEN notation
+    function parseFEN(fen) {
+      const [position] = fen.split(' ');
+      gameState.board = [];
+      
+      const ranks = position.split('/');
+      for (let i = 0; i < 8; i++) {
+        gameState.board[i] = [];
+        let col = 0;
+        
+        for (const char of ranks[i]) {
+          if (isNaN(char)) {
+            gameState.board[i][col] = char;
+            col++;
+          } else {
+            const empty = parseInt(char);
+            for (let j = 0; j < empty; j++) {
+              gameState.board[i][col] = null;
+              col++;
+            }
+          }
+        }
+      }
+    }
+
+    // Render board state
+    function renderBoard() {
+      const squares = document.querySelectorAll('.square');
+      
+      squares.forEach(square => {
+        const row = parseInt(square.dataset.row);
+        const col = parseInt(square.dataset.col);
+        const displayRow = gameState.flipped ? 7 - row : row;
+        const displayCol = gameState.flipped ? 7 - col : col;
+        const piece = gameState.board[displayRow][displayCol];
+        
+        square.innerHTML = '';
+        square.classList.remove('selected', 'legal-move', 'legal-capture', 'last-move');
+        
+        if (piece && PIECES[piece]) {
+          const img = document.createElement('img');
+          img.src = PIECES[piece].svg;
+          img.alt = PIECES[piece].name;
+          img.className = 'piece';
+          img.draggable = true;
+          img.dataset.piece = piece;
+          
+          img.addEventListener('dragstart', handleDragStart);
+          img.addEventListener('dragend', handleDragEnd);
+          
+          square.appendChild(img);
+        }
+        
+        // Highlight last move
+        if (gameState.lastMove) {
+          const [from, to] = gameState.lastMove;
+          if ((displayRow === from[0] && displayCol === from[1]) ||
+              (displayRow === to[0] && displayCol === to[1])) {
+            square.classList.add('last-move');
+          }
+        }
+      });
+      
+      highlightLegalMoves();
+    }
+
+    // Handle square click
+    function handleSquareClick(e) {
+      if (!gameState.isPlayerTurn) return;
+      
+      const square = e.currentTarget;
+      const row = parseInt(square.dataset.row);
+      const col = parseInt(square.dataset.col);
+      const displayRow = gameState.flipped ? 7 - row : row;
+      const displayCol = gameState.flipped ? 7 - col : col;
+      const piece = gameState.board[displayRow][displayCol];
+      
+      // If a piece is selected and this is a legal move
+      if (gameState.selectedSquare) {
+        const isLegalMove = gameState.legalMoves.some(
+          move => move[0] === displayRow && move[1] === displayCol
+        );
+        
+        if (isLegalMove) {
+          makeMove(gameState.selectedSquare, [displayRow, displayCol]);
+          return;
+        }
+      }
+      
+      // Select piece
+      if (piece && isPlayerPiece(piece)) {
+        selectSquare(displayRow, displayCol);
+      } else {
+        deselectSquare();
+      }
+    }
+
+    // Select square
+    function selectSquare(row, col) {
+      gameState.selectedSquare = [row, col];
+      gameState.legalMoves = calculateLegalMoves(row, col);
+      renderBoard();
+    }
+
+    // Deselect square
+    function deselectSquare() {
+      gameState.selectedSquare = null;
+      gameState.legalMoves = [];
+      renderBoard();
+    }
+
+    // Highlight legal moves
+    function highlightLegalMoves() {
+      if (!gameState.selectedSquare) return;
+      
+      const [selRow, selCol] = gameState.selectedSquare;
+      const squares = document.querySelectorAll('.square');
+      
+      squares.forEach(square => {
+        const row = parseInt(square.dataset.row);
+        const col = parseInt(square.dataset.col);
+        const displayRow = gameState.flipped ? 7 - row : row;
+        const displayCol = gameState.flipped ? 7 - col : col;
+        
+        if (displayRow === selRow && displayCol === selCol) {
+          square.classList.add('selected');
+        }
+        
+        const isLegalMove = gameState.legalMoves.some(
+          move => move[0] === displayRow && move[1] === displayCol
+        );
+        
+        if (isLegalMove) {
+          const targetPiece = gameState.board[displayRow][displayCol];
+          square.classList.add(targetPiece ? 'legal-capture' : 'legal-move');
+        }
+      });
+    }
+
+    // Calculate legal moves (simplified - would need full chess rules)
+    function calculateLegalMoves(row, col) {
+      const piece = gameState.board[row][col];
+      const moves = [];
+      
+      if (!piece) return moves;
+      
+      const isWhite = piece === piece.toUpperCase();
+      const type = piece.toLowerCase();
+      
+      // Basic move generation (simplified)
+      switch(type) {
+        case 'p':
+          const direction = isWhite ? -1 : 1;
+          const startRow = isWhite ? 6 : 1;
+          
+          // Forward move
+          if (isValidSquare(row + direction, col) && !gameState.board[row + direction][col]) {
+            moves.push([row + direction, col]);
+            
+            // Double move from start
+            if (row === startRow && !gameState.board[row + 2 * direction][col]) {
+              moves.push([row + 2 * direction, col]);
+            }
+          }
+          
+          // Captures
+          [-1, 1].forEach(offset => {
+            const newRow = row + direction;
+            const newCol = col + offset;
+            if (isValidSquare(newRow, newCol)) {
+              const target = gameState.board[newRow][newCol];
+              if (target && isOpponentPiece(target, isWhite)) {
+                moves.push([newRow, newCol]);
+              }
+            }
+          });
+          break;
+          
+        case 'n':
+          const knightMoves = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+          knightMoves.forEach(([dr, dc]) => {
+            const newRow = row + dr;
+            const newCol = col + dc;
+            if (isValidSquare(newRow, newCol)) {
+              const target = gameState.board[newRow][newCol];
+              if (!target || isOpponentPiece(target, isWhite)) {
+                moves.push([newRow, newCol]);
+              }
+            }
+          });
+          break;
+          
+        case 'k':
+          const kingMoves = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+          kingMoves.forEach(([dr, dc]) => {
+            const newRow = row + dr;
+            const newCol = col + dc;
+            if (isValidSquare(newRow, newCol)) {
+              const target = gameState.board[newRow][newCol];
+              if (!target || isOpponentPiece(target, isWhite)) {
+                moves.push([newRow, newCol]);
+              }
+            }
+          });
+          break;
+          
+        case 'r':
+          addSlidingMoves(row, col, [[1,0],[-1,0],[0,1],[0,-1]], moves, isWhite);
+          break;
+          
+        case 'b':
+          addSlidingMoves(row, col, [[1,1],[1,-1],[-1,1],[-1,-1]], moves, isWhite);
+          break;
+          
+        case 'q':
+          addSlidingMoves(row, col, [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]], moves, isWhite);
+          break;
+      }
+      
+      return moves;
+    }
+
+    // Add sliding piece moves
+    function addSlidingMoves(row, col, directions, moves, isWhite) {
+      directions.forEach(([dr, dc]) => {
+        let newRow = row + dr;
+        let newCol = col + dc;
+        
+        while (isValidSquare(newRow, newCol)) {
+          const target = gameState.board[newRow][newCol];
+          
+          if (!target) {
+            moves.push([newRow, newCol]);
+          } else {
+            if (isOpponentPiece(target, isWhite)) {
+              moves.push([newRow, newCol]);
+            }
+            break;
+          }
+          
+          newRow += dr;
+          newCol += dc;
+        }
+      });
+    }
+
+    // Validation helpers
+    function isValidSquare(row, col) {
+      return row >= 0 && row < 8 && col >= 0 && col < 8;
+    }
+
+    function isPlayerPiece(piece) {
+      return piece === piece.toUpperCase(); // White pieces
+    }
+
+    function isOpponentPiece(piece, isWhite) {
+      return isWhite ? piece === piece.toLowerCase() : piece === piece.toUpperCase();
+    }
+
+    // Make move
+    function makeMove(from, to) {
+      const [fromRow, fromCol] = from;
+      const [toRow, toCol] = to;
+      
+      const piece = gameState.board[fromRow][fromCol];
+      const captured = gameState.board[toRow][toCol];
+      
+      // Execute move
+      gameState.board[toRow][toCol] = piece;
+      gameState.board[fromRow][fromCol] = null;
+      
+      // Update state
+      gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
+      gameState.moveHistory.push({
+        from: [fromRow, fromCol],
+        to: [toRow, toCol],
+        piece,
+        captured,
+        fen: boardToFEN()
+      });
+      
+      deselectSquare();
+      updateMoveList();
+      updateGameInfo();
+      
+      // Switch turn
+      gameState.isPlayerTurn = false;
+      updateStatus('Piperlove is thinking...', true);
+      
+      // Call engine
+      setTimeout(() => requestEngineMove(), 500);
+    }
+
+    // Request engine move from API
+    async function requestEngineMove() {
+      try {
+        const fen = boardToFEN();
+        const response = await fetch('https://wwwtriplew.me/api/piperlove/play', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fen, depth: 8 })
+        });
+        
+        if (!response.ok) throw new Error('API request failed');
+        
+        const data = await response.json();
+        
+        if (data.bestMove) {
+          executeEngineMove(data.bestMove);
+          updateEvaluation(data.score || 0);
+        }
+      } catch (error) {
+        console.error('Engine error:', error);
+        updateStatus('Engine error - your turn', false);
+        gameState.isPlayerTurn = true;
+      }
+    }
+
+    // Execute engine move
+    function executeEngineMove(uciMove) {
+      // Parse UCI format (e.g., "e2e4")
+      const fromCol = uciMove.charCodeAt(0) - 97;
+      const fromRow = 8 - parseInt(uciMove[1]);
+      const toCol = uciMove.charCodeAt(2) - 97;
+      const toRow = 8 - parseInt(uciMove[3]);
+      
+      const piece = gameState.board[fromRow][fromCol];
+      const captured = gameState.board[toRow][toCol];
+      
+      gameState.board[toRow][toCol] = piece;
+      gameState.board[fromRow][fromCol] = null;
+      
+      gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
+      gameState.moveHistory.push({
+        from: [fromRow, fromCol],
+        to: [toRow, toCol],
+        piece,
+        captured,
+        fen: boardToFEN()
+      });
+      
+      renderBoard();
+      updateMoveList();
+      updateGameInfo();
+      
+      gameState.isPlayerTurn = true;
+      updateStatus('Your turn - White to move', false);
+    }
+
+    // Convert board to FEN
+    function boardToFEN() {
+      let fen = '';
+      
+      for (let row = 0; row < 8; row++) {
+        let empty = 0;
+        
+        for (let col = 0; col < 8; col++) {
+          const piece = gameState.board[row][col];
+          
+          if (piece) {
+            if (empty > 0) {
+              fen += empty;
+              empty = 0;
+            }
+            fen += piece;
+          } else {
+            empty++;
+          }
+        }
+        
+        if (empty > 0) fen += empty;
+        if (row < 7) fen += '/';
+      }
+      
+      fen += ' w KQkq - 0 1'; // Simplified
+      return fen;
+    }
+
+    // Update UI
+    function updateStatus(message, thinking) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.classList.toggle('thinking', thinking);
+    }
+
+    function updateMoveList() {
+      const moveList = document.getElementById('moveList');
+      
+      if (gameState.moveHistory.length === 0) {
+        moveList.innerHTML = '<p style="text-align: center; color: var(--muted); font-size: 0.75rem;">No moves yet</p>';
+        return;
+      }
+      
+      let html = '';
+      for (let i = 0; i < gameState.moveHistory.length; i += 2) {
+        const moveNum = Math.floor(i / 2) + 1;
+        const white = moveToNotation(gameState.moveHistory[i]);
+        const black = gameState.moveHistory[i + 1] ? moveToNotation(gameState.moveHistory[i + 1]) : '';
+        
+        html += `<div class="move-item">${moveNum}. ${white} ${black}</div>`;
+      }
+      
+      moveList.innerHTML = html;
+      moveList.scrollTop = moveList.scrollHeight;
+    }
+
+    function moveToNotation(move) {
+      const cols = 'abcdefgh';
+      const from = cols[move.from[1]] + (8 - move.from[0]);
+      const to = cols[move.to[1]] + (8 - move.to[0]);
+      return from + to;
+    }
+
+    function updateGameInfo() {
+      document.getElementById('moveCount').textContent = gameState.moveHistory.length;
+      
+      if (gameState.moveHistory.length > 0) {
+        const lastMove = gameState.moveHistory[gameState.moveHistory.length - 1];
+        document.getElementById('lastMove').textContent = moveToNotation(lastMove);
+      }
+    }
+
+    function updateEvaluation(score) {
+      const evalBar = document.getElementById('evalBar');
+      const evalScore = document.getElementById('evalScore');
+      
+      // Convert score to percentage (clamped between -5 and +5)
+      const clampedScore = Math.max(-5, Math.min(5, score));
+      const percentage = 50 + (clampedScore / 5) * 50;
+      
+      evalBar.style.width = percentage + '%';
+      evalScore.textContent = (score >= 0 ? '+' : '') + score.toFixed(2);
+    }
+
+    // Drag and drop handlers
+    function handleDragStart(e) {
+      if (!gameState.isPlayerTurn) {
+        e.preventDefault();
+        return;
+      }
+      
+      const img = e.target;
+      const square = img.parentElement;
+      const row = parseInt(square.dataset.row);
+      const col = parseInt(square.dataset.col);
+      const displayRow = gameState.flipped ? 7 - row : row;
+      const displayCol = gameState.flipped ? 7 - col : col;
+      
+      img.classList.add('dragging');
+      selectSquare(displayRow, displayCol);
+      
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', `${displayRow},${displayCol}`);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+      if (gameState.legalMoves.length > 0) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      }
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      
+      const square = e.currentTarget;
+      const row = parseInt(square.dataset.row);
+      const col = parseInt(square.dataset.col);
+      const displayRow = gameState.flipped ? 7 - row : row;
+      const displayCol = gameState.flipped ? 7 - col : col;
+      
+      const isLegalMove = gameState.legalMoves.some(
+        move => move[0] === displayRow && move[1] === displayCol
+      );
+      
+      if (isLegalMove && gameState.selectedSquare) {
+        makeMove(gameState.selectedSquare, [displayRow, displayCol]);
+      } else {
+        deselectSquare();
+      }
+    }
+
+    // Control functions
+    function resetGame() {
+      gameState = {
+        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+        board: [],
+        selectedSquare: null,
+        legalMoves: [],
+        moveHistory: [],
+        isPlayerTurn: true,
+        flipped: gameState.flipped,
+        lastMove: null
+      };
+      
+      parseFEN(gameState.fen);
+      renderBoard();
+      updateMoveList();
+      updateGameInfo();
+      updateEvaluation(0);
+      updateStatus('Your turn - White to move', false);
+    }
+
+    function undoMove() {
+      if (gameState.moveHistory.length < 2) return;
+      
+      // Undo last 2 moves (player + engine)
+      gameState.moveHistory.pop();
+      gameState.moveHistory.pop();
+      
+      const lastState = gameState.moveHistory[gameState.moveHistory.length - 1];
+      if (lastState) {
+        parseFEN(lastState.fen);
+      } else {
+        parseFEN(gameState.fen);
+      }
+      
+      gameState.isPlayerTurn = true;
+      gameState.lastMove = lastState ? [[lastState.to[0], lastState.to[1]], [lastState.to[0], lastState.to[1]]] : null;
+      
+      renderBoard();
+      updateMoveList();
+      updateGameInfo();
+      updateStatus('Your turn - White to move', false);
+    }
+
+    function flipBoard() {
+      gameState.flipped = !gameState.flipped;
+      renderBoard();
+    }
+
+    // Initialize on load
+    initBoard();
+  </script>
