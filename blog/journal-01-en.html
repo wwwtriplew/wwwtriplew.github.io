@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journal #1 – Why I'm Building PiperLove | wwwtriplew</title>
+  <meta name="description" content="My journey from physics to mathematics to programming, and why I'm building a chess engine.">
+  <link rel="icon" href="../assets/img/pied-piper-pp.ico" />
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <span class="logo">wwwtriplew</span>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="first-post.html">Journal</a>
+      <a href="journal-01-zh.html">中文</a>
+    </nav>
+  </header>
+  <main style="max-width: 800px; margin: 0 auto; padding: 6rem 2rem 3rem;">
+    <article>
+      <h1 style="margin-bottom: 0.5rem;">Journal #1 – Why I'm Building PiperLove</h1>
+      <p style="color: #5a6b5f; margin-bottom: 2rem;">December 1, 2025</p>
+      
+      <div style="line-height: 1.8; color: #1d2b24;">
+        <p style="margin-bottom: 1.5rem;">
+          I've always loved abstraction. When I was 15, I spent months grinding for HKPhyO with zero professional guidance—just me, my notes, and a lot of stubbornness. What fascinated me about physics was how it uses models to cut away messy details and give us clean, elegant results. Whether it's a school exam or an Olympiad problem, the beauty lies in simplifying reality into something solvable.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          But here's the thing: eventually, I started to hate the part where you have to decide which model to use. Take mechanics as an example—strip away air resistance, ignore fluid resistance, and suddenly fluid mechanics feels like it doesn't exist. That's an exaggeration, sure, but the point is: the act of choosing what to ignore became the most stressed step. It felt arbitrary. So I switched to math.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          That summer two years ago was pure joy. I dove into random topics—sets, probability, combinatorics, linear algebra, vector calculus. Math felt so clean, so purely abstract. I still remember a comment I saw on Bilibili:
+        </p>
+
+        <blockquote style="margin: 2rem 0; padding: 1.5rem; background: rgba(123, 150, 105, 0.1); border-left: 4px solid #7B9669; border-radius: 0.5rem; font-style: italic;">
+          "Linear Algebra is about abstraction and then condensation back to reality, repeated like a spiral. Your understanding grows in that helical motion."
+        </blockquote>
+
+        <p style="margin-bottom: 1.5rem;">
+          That hit me hard. For example, realizing that Pigeonhole Principle is just about function mapping and injectivity blew my mind. It starts with pigeons and holes, then suddenly you're talking about set cardinality and mappings. That's the kind of abstraction I live for.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          Then came programming—and honestly, I was mesmerized. It's got abstraction like OOP and function encapsulation, it's got the physics vibe of real-time testing and modeling, and most importantly, it's a well-defined, contradiction-free playground. I fell in love instantly.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          I started with Python. Every tutorial said: "Pick a project." Well, I'm a chess player (around 1400 ELO on chess.com), and I've been amazed by AlphaZero for years. So the first thing that came to mind was: build a chess engine.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          But it's not just about building something cool—I have questions I want answers to. For example:
+        </p>
+
+        <p style="margin-bottom: 1rem; font-weight: 600; color: #7B9669;">
+          If I want the engine to play more aggressively, should I increase or decrease the weighting of king safety?
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          Intuitively, you'd think lowering king safety makes the bot attack more. But almost all engines use Minimax, which is inherently dualistic. If you devalue king safety, the engine might just focus on material and mobility instead—ironically moving away from attacking the opponent's king! I haven't tested this yet (time is short), but I'm dying to know the answer. And yeah, I know Texel Tuning exists, but that optimizes for win rate, not play style. I'm chasing personality, not perfection.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          So here I am, starting PiperLove. Not because it's easy, but because it's the perfect mix of everything I love: abstraction, logic, and a playground where ideas become reality.
+        </p>
+      </div>
+
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(29,43,36,0.1);">
+        <a href="first-post.html" style="color: #7B9669; text-decoration: none;">← Back to Journal</a>
+        <span style="margin: 0 1rem; color: #b0c4c4;">|</span>
+        <a href="journal-01-zh.html" style="color: #7B9669; text-decoration: none;">中文版本 →</a>
+      </div>
+    </article>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: #5a6b5f; font-size: 0.9rem; margin-top: 4rem;">
+    © 2025 Ng Ho Hin · Piperlove · <a href="https://wwwtriplew.me" style="color: #7B9669;">wwwtriplew.me</a>
+  </footer>
+</body>
+</html>

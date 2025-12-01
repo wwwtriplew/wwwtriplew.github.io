@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>日志 #1 – 为什么我要做 PiperLove | wwwtriplew</title>
+  <meta name="description" content="从物理到数学到编程的旅程，以及为什么我要做一个国际象棋引擎。">
+  <link rel="icon" href="../assets/img/pied-piper-pp.ico" />
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <span class="logo">wwwtriplew</span>
+    <nav>
+      <a href="../index.html">主页</a>
+      <a href="first-post.html">日志</a>
+      <a href="journal-01-en.html">English</a>
+    </nav>
+  </header>
+  <main style="max-width: 800px; margin: 0 auto; padding: 6rem 2rem 3rem;">
+    <article>
+      <h1 style="margin-bottom: 0.5rem;">日志 #1 – 为什么我要做 PiperLove</h1>
+      <p style="color: #5a6b5f; margin-bottom: 2rem;">2025年12月1日</p>
+      
+      <div style="line-height: 1.8; color: #1d2b24;">
+        <p style="margin-bottom: 1.5rem;">
+          我一直对"抽象"情有独钟。15 岁那年，我一个人准备 HKPhyO（香港物理奥林匹克），没有老师，没有培训班，只有自己和一堆笔记。那时候我喜欢物理，因为它能用模型把复杂的现实切掉，留下干净漂亮的结果。不管是校内考试还是奥赛题，最美的地方就是这种简化。
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          但后来，我开始厌倦一个环节：决定用哪个模型。比如力学，如果我们选择忽略空气阻力和流体阻力，那是不是整个流体力学都可以忽略？当然这是夸张的说法，但问题在于，选择忽略什么，反而成了最被强调的步骤，甚至有点随意。所以我转向了数学。
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          两年前的那个夏天，我疯狂地学各种数学主题——集合、概率、组合、线性代数、向量微积分。数学让我觉得纯粹、干净。我还记得在 B 站看到一句评论：
+        </p>
+
+        <blockquote style="margin: 2rem 0; padding: 1.5rem; background: rgba(123, 150, 105, 0.1); border-left: 4px solid #7B9669; border-radius: 0.5rem; font-style: italic;">
+          "线性代数就是不断抽象，然后再凝练回现实，像螺旋一样循环，你对这个主题的理解也在这种螺旋中不断提升。"
+        </blockquote>
+
+        <p style="margin-bottom: 1.5rem;">
+          这句话真的击中了我。比如，当我意识到鸽巢原理其实就是函数映射、单射和集合大小的问题时，那种惊叹感太美妙了。它从"鸽子和洞"这种直观场景，抽象到集合论的核心概念。这就是我喜欢的抽象。
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          后来我遇到了编程，彻底被迷住了。它有抽象（比如 OOP 封装逻辑），有物理那种实时测试和建模的感觉，更重要的是，它是一个定义清晰、无矛盾的游乐场。我立刻爱上了它。
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          我从 Python 入手。教程都说："找一个项目。" 我是个国际象棋玩家（chess.com 上大约 1400 ELO），而且一直对 AlphaZero 着迷。所以第一个想到的项目就是：做一个象棋引擎。
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          但这不仅仅是为了做个酷东西，我还有一些问题想找到答案。比如：
+        </p>
+
+        <p style="margin-bottom: 1rem; font-weight: 600; color: #7B9669;">
+          如果我想让引擎下得更激进，是应该提高还是降低王安全的权重？
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          直觉上，你可能觉得降低王安全会让引擎更爱攻击。但几乎所有引擎都用 Minimax 算法，它本质上是双向的。如果你降低王安全，结果可能是引擎更关注子力和机动性，反而远离攻击对方国王！我还没做测试（时间太紧），但我真的很想知道答案。是的，我知道 Texel Tuning，但它优化的是胜率，不是风格。我追求的是个性，而不是完美。
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          所以，我开始做 PiperLove。不是因为它简单，而是因为它完美结合了我喜欢的一切：抽象、逻辑，还有一个能把想法变成现实的游乐场。
+        </p>
+      </div>
+
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(29,43,36,0.1);">
+        <a href="first-post.html" style="color: #7B9669; text-decoration: none;">← 返回日志</a>
+        <span style="margin: 0 1rem; color: #b0c4c4;">|</span>
+        <a href="journal-01-en.html" style="color: #7B9669; text-decoration: none;">English Version →</a>
+      </div>
+    </article>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: #5a6b5f; font-size: 0.9rem; margin-top: 4rem;">
+    © 2025 Ng Ho Hin · Piperlove · <a href="https://wwwtriplew.me" style="color: #7B9669;">wwwtriplew.me</a>
+  </footer>
+</body>
+</html>
