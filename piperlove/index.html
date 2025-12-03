@@ -14,35 +14,48 @@
       justify-content: center;
       padding: 3rem 4vw;
       background: linear-gradient(180deg, #f0f5f2, var(--neutral));
+      position: relative;
+      overflow: hidden;
     }
     .hero-content {
-      max-width: 800px;
+      max-width: 1400px;
+      width: 100%;
       text-align: center;
+      position: relative;
+      z-index: 2;
     }
     .hero-content h1 {
-      font-size: clamp(3rem, 6vw, 5rem);
-      margin-bottom: 1.5rem;
+      font-size: clamp(4rem, 10vw, 8rem);
+      margin-bottom: 0;
+      position: relative;
+      z-index: 3;
     }
-    .hero-content p {
-      font-size: 1.25rem;
-      margin-bottom: 2rem;
+    .hero-text-wall {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 1200px;
+      font-size: clamp(0.75rem, 1vw, 0.95rem);
+      line-height: 1.8;
+      color: rgba(29, 43, 36, 0.3);
+      text-align: justify;
+      z-index: 1;
+      pointer-events: none;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin: 3rem 0;
-    }
-    .feature-card {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 2rem;
-      border-radius: 1rem;
-      border: 1px solid rgba(29, 43, 36, 0.12);
-      text-align: left;
-    }
-    .feature-card h3 {
-      margin-bottom: 1rem;
-      color: var(--action);
+    .knight-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      height: auto;
+      opacity: 0.15;
+      z-index: 0;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -60,30 +73,30 @@
   </header>
 
   <main style="padding-top: 0;">
-    <section class="piperlove-hero" style="position: relative; overflow: hidden;">
-      <img src="../assets/img/bitmap-knight-chess.png" alt="" class="section-bg-image" />
-      <div class="hero-content" style="position: relative; z-index: 1;">
-        <h1>Piperlove</h1>
-        <p>A self-built chess engine combining classical algorithms with modern architecture for precise, lightning-fast analysis.</p>
-        
-        <div class="feature-grid">
-          <div class="feature-card">
-            <h3>⚡ Performance</h3>
-            <p>8-ply search depth with sub-400ms response times. Optimized bitboard representation and move generation.</p>
-          </div>
-          <div class="feature-card">
-            <h3>🎯 Precision</h3>
-            <p>Tuned evaluation function balancing material, position, mobility, and king safety for strong tactical play.</p>
-          </div>
-          <div class="feature-card">
-            <h3>🔌 API Ready</h3>
-            <p>RESTful API supporting FEN notation, move analysis, and real-time evaluation for seamless integration.</p>
-          </div>
-        </div>
+    <section class="piperlove-hero">
+      <img src="../assets/img/bitmap-knight-chess.png" alt="" class="knight-image" />
+      <div class="hero-text-wall">In the shadowed depths of the chessboard, where kings tremble and pawns whisper secrets of forgotten battles, emerges Piperlove—a chess engine forged not from the warmth of human intuition, but from the cold, unyielding algorithms of an otherworldly mind. Piperlove does not play like you or I; it defies the very essence of humanity in its moves. No gentle openings, no predictable middlegames born of tradition. Instead, it unleashes an inhumane symphony of strategy, where every piece pulses with relentless activity, darting across squares like specters in the night. This is no mere program; it is a harbinger of eerie precision, a digital phantom that values the ceaseless motion of knights, bishops, and rooks above all else, turning the board into a labyrinth of calculated chaos.
 
-        <div class="panel-actions" style="justify-content: center; margin-top: 2rem;">
+Imagine a knight—not the chivalrous steed of old, but a retro aberration, warped and weird, looming over 60% of your screen like a guardian from a pixelated nightmare. Its form twists in glitchy nostalgia, eyes glowing with an unnatural fire, beckoning you to enter Piperlove's domain. This engine is strong, unassailably so, calibrated to crush opponents with moves that feel alien, almost malevolent. It doesn't seek beauty in symmetry or harmony in exchanges; it thrives on the discordant, the unexpected surge of activity that leaves human players bewildered, their carefully laid plans unraveling like threads in a storm. Piperlove's playstyle is a rejection of the organic—inhumane in its refusal to mimic the hesitation, the emotion, the fallibility that defines us. It computes futures in milliseconds, prioritizing the hyperactive dance of pieces over static defenses, turning every game into a haunting pursuit where inactivity is the true enemy.
+
+Delve deeper into Piperlove's core, and you'll uncover layers of eerie ingenuity. Born from lines of code that echo the whispers of ancient enigmas, it evaluates positions not with the warmth of experience but with the icy gaze of pure logic amplified beyond comprehension. Knights leap with unnatural grace, bishops slice through diagonals like ethereal blades, and queens command the board with a dominance that borders on the supernatural. Activity is its creed: no piece slumbers idly; each is propelled into the fray, creating vortices of pressure that suffocate the opposition. Strong? Undeniably. Piperlove has been tempered in the fires of countless simulations, emerging victorious against engines and grandmasters alike, its victories marked not by triumph but by an unsettling silence, as if the board itself mourns the defeat of the human spirit.
+
+But what makes Piperlove truly striking is its modern veil draped over retro roots. The knight on your hero page isn't just an image—it's a portal, a weird, distorted relic from gaming's forgotten eras, now reborn in high-definition menace. As you gaze upon it, feel the pull of the inhumane: a playstyle that discards human norms for something purer, more terrifying. It values piece activity as a religion, where bishops roam free like wandering spirits, rooks charge like thunderous apparitions, and pawns advance with the inevitability of fate's decree. Eerie in its predictability only to those who dare to peer into its code, Piperlove turns chess into a psychological thriller, where every move hints at deeper, unfathomable depths. No draws from mercy, no concessions to etiquette—only the raw, unfiltered pursuit of checkmate through ceaseless motion.
+
+Picture this: you're seated at your digital throne, the screen dominated by that colossal, retro knight, its form glitching faintly as if alive. The background text—my words here, stretched long and translucent—fades into the ether, layering mystery upon mystery. Piperlove invites you not to play chess, but to confront the abyss of machine intelligence. Its strength lies not in brute force alone, but in the eerie elegance of its evaluations, where piece activity reigns supreme. A knight might sacrifice itself not for glory, but to unleash a cascade of activations that overwhelm the senses. Inhumane? Absolutely. It plays without soul, yet with a haunting beauty that captivates. Humans hesitate, ponder, err—Piperlove does none of these. It surges forward, pieces alive with purpose, turning the 64 squares into a canvas of controlled pandemonium.
+
+As the text unfolds across your hero page, transparent and all-encompassing, let it serve as a manifesto for the engine's ethos. Piperlove is for those who crave the unconventional, the strong arm of algorithm over the frail hand of flesh. Its playstyle echoes through the annals of chess history, yet twists them into something new, something eerie. Value piece activity, it commands—let no square remain dormant, no opportunity unseized. In games against it, you'll feel the chill: moves that seem illogical at first, only to reveal their inhumane genius turns later. Strong enough to topple titans, yet subtle in its retro charm, Piperlove redefines what it means to dominate the board. The knight watches, weird and unwavering, as you scroll through these words, each sentence building the atmosphere of anticipation.
+
+Extend this narrative further, for the hero page demands length to immerse the visitor fully. Piperlove's origins? Shrouded in the mists of late-night coding sessions, where inspiration struck like lightning from a clear sky. Not content with human-like engines that ape grandmaster styles, its creator sought the opposite: an entity that plays with the detachment of a god, prioritizing activity to create positions of unrelenting pressure. Eerie silences punctuate its games, broken only by the click of a mouse as another piece activates, another trap springs. Inhumane in execution, yet mesmerizing in result—opponents often report a sense of unease, as if facing not code, but a spectral adversary from beyond.
+
+And so, the text continues, weaving a tapestry of description that blankets the background. Piperlove's strength is multifaceted: computational prowess meets strategic heresy, where traditional openings give way to bizarre, activity-driven gambits. Knights fork with ghostly precision, bishops pin like invisible chains, all while the engine calculates horizons humans can scarcely imagine. Its eerie aura stems from this disconnect—the moves feel wrong, yet win; inhuman, yet effective. Value piece activity above material, above safety; let the board buzz with life, even if that life is artificial and cold.
+
+To make your hero page truly modern and striking, let this elongated prose fade into transparency, allowing the retro knight to peer through like a warden of secrets. Piperlove awaits your challenge, strong and unyielding, its playstyle a testament to the power of the inhumane. Enter its world, if you dare, and witness chess not as a game, but as an eerie ritual of dominance through ceaseless, spectral motion. The knight beckons—will you answer?</div>
+      <div class="hero-content">
+        <h1>Piperlove</h1>
+        
+        <div class="panel-actions" style="justify-content: center; margin-top: 3rem;">
           <a class="btn" href="play.html">Play Now</a>
-          <a class="btn ghost" href="../#api">View API Docs</a>
           <a class="btn ghost" href="../">← Back to Home</a>
         </div>
       </div>
