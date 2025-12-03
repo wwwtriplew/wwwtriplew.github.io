@@ -6,7 +6,7 @@
     <title>Ng Ho Hin · Piperlove</title>
     <meta
       name="description"
-      content="Ng Ho Hin's minimal portfolio with Piperlove, scroll-driven storytelling, and API experience."
+      content="Ng Ho Hin's minimal portfolio with Piperlove chess engine and scroll-driven storytelling."
     />
     <link rel="icon" href="assets/img/pied-piper-pp.ico" />
     <link rel="stylesheet" href="assets/css/style.css" />
@@ -55,48 +55,16 @@
           <p>
             Piperlove is a self-built chess engine tuned for positional understanding and tactical precision. 
             The engine is optimized for PyPy, leverages modern bitboards for lightning-fast move generation, 
-            and features a REST-based API that lets you request evaluations, candidate moves, and live analysis.
+            and provides an interactive browser-based chess experience.
           </p>
           <ul class="stats">
             <li><strong>Search Depth:</strong> 8 plies standard / experimental 10-12 ply rollout</li>
-            <li><strong>API Support:</strong> FEN, SAN notation, move lists, evaluation trends</li>
             <li><strong>Performance:</strong> Sub-400ms response time with intelligent caching</li>
             <li><strong>Features:</strong> Opening book, endgame tablebase integration, multi-threading</li>
+            <li><strong>Play Mode:</strong> Interactive browser chess with real-time evaluation</li>
           </ul>
           <div class="panel-actions">
             <a class="btn" href="piperlove/index.html">Play Against Piperlove</a>
-            <a class="btn ghost" href="#api">Explore the API</a>
-          </div>
-        </div>
-      </section>
-
-      <section id="api" class="panel reveal">
-        <div class="panel-content">
-          <h3>Live API preview</h3>
-          <p>
-            Send a <strong>POST</strong> request to <code>https://wwwtriplew.me/api/piperlove/play</code> with a JSON body containing the following parameters:
-          </p>
-          <ul>
-            <li><code>fen</code> <em>(string, required)</em>: The FEN string representing the chess position.</li>
-            <li><code>depth</code> <em>(integer, required)</em>: The search depth for the engine.</li>
-          </ul>
-          <div class="api-card">
-            <div><strong>Example request body:</strong></div>
-            <pre><code>{
-  "fen": "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - - 0 1",
-  "depth": 8
-}</code></pre>
-            <div><strong>Example response:</strong></div>
-            <pre><code>{
-  "bestMove": "e2e4",
-  "score": 0.23,
-  "pv": ["e2e4", "e7e5", "g1f3"]
-}</code></pre>
-            <ul>
-              <li><code>bestMove</code> <em>(string)</em>: The best move in UCI format.</li>
-              <li><code>score</code> <em>(number)</em>: Evaluation score from White's perspective (positive = White is better).</li>
-              <li><code>pv</code> <em>(array of strings, optional)</em>: Principal variation (best line found).</li>
-            </ul>
           </div>
         </div>
       </section>
