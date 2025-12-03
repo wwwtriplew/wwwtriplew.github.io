@@ -1,10 +1,10 @@
 /**
  * Piperlove Chess Engine API Client
- * API: https://pipier-love-api.vercel.app
+ * API: https://api.wwwtriplew.me
  */
 
 const ChessEngine = {
-  API_URL: 'https://pipier-love-api.vercel.app',
+  API_URL: 'https://api.wwwtriplew.me',
   
   /**
    * Get the best move from the chess engine
@@ -77,6 +77,14 @@ const ChessEngine = {
           error: 'Request timeout - engine took too long to respond'
         };
       }
+      // Network or CORS error
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        console.error('Network/CORS error - engine unreachable or blocked:', error);
+        return {
+          success: false,
+          error: 'Engine unreachable or blocked by CORS; check API_BASE and CORS configuration'
+        };
+      }
       console.error('Chess engine error:', error);
       return {
         success: false,
@@ -94,10 +102,21 @@ const ChessEngine = {
       const response = await fetch(`${this.API_URL}/health`, {
         signal: AbortSignal.timeout(5000) // 5 second timeout
       });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Health check failed with status ${response.status}:`, errorText);
+        return false;
+      }
+      
       const data = await response.json();
       return data.status === 'ok';
     } catch (error) {
-      console.error('Health check failed:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        console.error('Network/CORS error during health check - engine unreachable or blocked:', error);
+      } else {
+        console.error('Health check failed:', error);
+      }
       return false;
     }
   },
