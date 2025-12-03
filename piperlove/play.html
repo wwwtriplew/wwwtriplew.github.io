@@ -286,7 +286,7 @@
                 </div>
               </div>
               <p style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center;">
-                White advantage → | ← Black advantage
+                ← Black advantage | White advantage →
               </p>
             </div>
 
@@ -856,12 +856,14 @@
       const evalBar = document.getElementById('evalBar');
       const evalScore = document.getElementById('evalScore');
       
-      // Convert score to percentage (clamped between -5 and +5)
+      // Score is from White's perspective (positive = White ahead)
+      // Bar visual: 0% = Black advantage (left), 100% = White advantage (right)
+      // Convert score to percentage (clamped between -5 and +5 pawns)
       const clampedScore = Math.max(-5, Math.min(5, score));
       const percentage = 50 + (clampedScore / 5) * 50;
       
       evalBar.style.width = percentage + '%';
-      evalScore.textContent = (score >= 0 ? '+' : '') + score.toFixed(2);
+      evalScore.textContent = (score >= 0 ? '+' : '') + score.toFixed(1);
     }
 
     // Drag and drop handlers
