@@ -689,7 +689,7 @@
       updateGameInfo();
       
       gameState.isPlayerTurn = false;
-      updateStatus('Piperlove is thinking... (first move may take 30+ seconds due to server cold start)', true);
+      updateStatus('Piperlove is thinking... (12 seconds a move)', true);
       
       setTimeout(() => requestEngineMove(), 500);
     }
@@ -698,7 +698,7 @@
     async function requestEngineMove() {
       try {
         const fen = boardToFEN();
-        const thinkingTime = 8000; // 8 seconds - gives engine more time
+        const thinkingTime = 12000; // 12 seconds - gives engine more time
         
         console.log(`Requesting move: thinking=${thinkingTime}ms, timeout=${thinkingTime + 30000}ms`);
         const startTime = Date.now();
@@ -1002,8 +1002,8 @@
       if (isHealthy) {
         console.log('✓ Piperlove Chess Engine is online and ready');
       } else {
-        console.warn('⚠ Chess Engine API may be offline or slow (first request after inactivity may take 10+ seconds)');
-        updateStatus('Warning: Engine may be slow on first move', false);
+        console.warn('⚠ Chess Engine API may be offline');
+        updateStatus('Warning: Engine may be offline', false);
       }
     }
 
