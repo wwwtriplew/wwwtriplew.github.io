@@ -455,13 +455,21 @@
       const displayCol = gameState.flipped ? 7 - col : col;
       const piece = gameState.board[displayRow][displayCol];
       
+      console.log(`[CLICK] Square clicked: dataset=[${row},${col}], display=[${displayRow},${displayCol}], piece='${piece}'`);
+      
       // If a piece is selected and this is a legal move
       if (gameState.selectedSquare) {
+        console.log(`[CLICK] Piece selected at [${gameState.selectedSquare}], checking if [${displayRow},${displayCol}] is legal`);
+        console.log(`[CLICK] Legal moves:`, gameState.legalMoves);
+        
         const isLegalMove = gameState.legalMoves.some(
           move => move[0] === displayRow && move[1] === displayCol
         );
         
+        console.log(`[CLICK] Is legal move: ${isLegalMove}`);
+        
         if (isLegalMove) {
+          console.log(`[CLICK] ✓ Making move from [${gameState.selectedSquare}] to [${displayRow},${displayCol}]`);
           makeMove(gameState.selectedSquare, [displayRow, displayCol]);
           return;
         }
@@ -730,17 +738,23 @@
       
       const finalPiece = promotionPiece || piece;
       
+      console.log(`[MOVE] executeMoveInternal: ${piece} from [${fromRow},${fromCol}] to [${toRow},${toCol}]`);
+      
       gameState.board[toRow][toCol] = finalPiece;
       gameState.board[fromRow][fromCol] = null;
       
       // Handle castling - move the rook too
       if (piece && piece.toLowerCase() === 'k' && Math.abs(toCol - fromCol) === 2) {
+        console.log(`[CASTLE] Detected castling move!`);
         const isKingside = toCol > fromCol;
         const rookFromCol = isKingside ? 7 : 0;
         const rookToCol = isKingside ? toCol - 1 : toCol + 1;
         const rook = gameState.board[fromRow][rookFromCol];
+        console.log(`[CASTLE] ${isKingside ? 'Kingside' : 'Queenside'}: Moving rook from [${fromRow},${rookFromCol}] to [${fromRow},${rookToCol}]`);
+        console.log(`[CASTLE] Rook piece: '${rook}'`);
         gameState.board[fromRow][rookToCol] = rook;
         gameState.board[fromRow][rookFromCol] = null;
+        console.log(`[CASTLE] After castling, row ${fromRow}:`, gameState.board[fromRow]);
       }
       
       gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
