@@ -527,6 +527,11 @@
       const isWhite = piece === piece.toUpperCase();
       const type = piece.toLowerCase();
       
+      // Debug: log when calculating moves for king
+      if (type === 'k') {
+        console.log(`[KING] Calculating moves for ${piece} at [${row}, ${col}]`);
+      }
+      
       // Basic move generation (simplified)
       switch(type) {
         case 'p':
@@ -582,6 +587,59 @@
               }
             }
           });
+          
+          // Add castling moves
+          // White king on e1 (row 7, col 4), Black king on e8 (row 0, col 4)
+          const isOnStartSquare = (isWhite && row === 7 && col === 4) || (!isWhite && row === 0 && col === 4);
+          
+          if (type === 'k') {
+            console.log(`[KING] isOnStartSquare: ${isOnStartSquare} (isWhite=${isWhite}, row=${row}, col=${col})`);
+          }
+          
+          if (isOnStartSquare) {
+            const baseRow = isWhite ? 7 : 0;
+            
+            // Kingside castling (king moves to g-file, col 6)
+            const kingsideRookCol = 7;
+            const kingsideRook = gameState.board[baseRow][kingsideRookCol];
+            const kingsideRookIsCorrectColor = kingsideRook && 
+                kingsideRook.toLowerCase() === 'r' && 
+                (kingsideRook === kingsideRook.toUpperCase()) === isWhite;
+            const kingsidePathClear = !gameState.board[baseRow][5] && !gameState.board[baseRow][6];
+            
+            console.log(`[KING] Kingside: rook='${kingsideRook}', rookCorrect=${kingsideRookIsCorrectColor}, pathClear=${kingsidePathClear}`);
+            console.log(`[KING] Kingside squares: f=[${baseRow},5]='${gameState.board[baseRow][5]}', g=[${baseRow},6]='${gameState.board[baseRow][6]}'`);
+            
+            if (kingsideRookIsCorrectColor && kingsidePathClear) {
+              console.log(`[KING] ✓✓✓ Adding kingside castle to [${baseRow}, 6]`);
+              moves.push([baseRow, 6]); // King to g-file (col 6)
+            } else {
+              console.log(`[KING] ✗ Kingside castle NOT added`);
+            }
+            
+            // Queenside castling (king moves to c-file, col 2)
+            const queensideRookCol = 0;
+            const queensideRook = gameState.board[baseRow][queensideRookCol];
+            const queensideRookIsCorrectColor = queensideRook && 
+                queensideRook.toLowerCase() === 'r' && 
+                (queensideRook === queensideRook.toUpperCase()) === isWhite;
+            const queensidePathClear = !gameState.board[baseRow][1] && !gameState.board[baseRow][2] && !gameState.board[baseRow][3];
+            
+            console.log(`[KING] Queenside: rook='${queensideRook}', rookCorrect=${queensideRookIsCorrectColor}, pathClear=${queensidePathClear}`);
+            console.log(`[KING] Queenside squares: b=[${baseRow},1]='${gameState.board[baseRow][1]}', c=[${baseRow},2]='${gameState.board[baseRow][2]}', d=[${baseRow},3]='${gameState.board[baseRow][3]}'`);
+            
+            if (queensideRookIsCorrectColor && queensidePathClear) {
+              console.log(`[KING] ✓✓✓ Adding queenside castle to [${baseRow}, 2]`);
+              moves.push([baseRow, 2]); // King to c-file (col 2)
+            } else {
+              console.log(`[KING] ✗ Queenside castle NOT added`);
+            }
+          }
+          
+          if (type === 'k') {
+            console.log(`[KING] Total moves for king: ${moves.length}`, moves);
+          }
+          
           break;
           
         case 'r':
@@ -675,6 +733,16 @@
       gameState.board[toRow][toCol] = finalPiece;
       gameState.board[fromRow][fromCol] = null;
       
+      // Handle castling - move the rook too
+      if (piece && piece.toLowerCase() === 'k' && Math.abs(toCol - fromCol) === 2) {
+        const isKingside = toCol > fromCol;
+        const rookFromCol = isKingside ? 7 : 0;
+        const rookToCol = isKingside ? toCol - 1 : toCol + 1;
+        const rook = gameState.board[fromRow][rookFromCol];
+        gameState.board[fromRow][rookToCol] = rook;
+        gameState.board[fromRow][rookFromCol] = null;
+      }
+      
       gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
       gameState.moveHistory.push({
         from: [fromRow, fromCol],
@@ -757,6 +825,17 @@
       
       gameState.board[toRow][toCol] = piece;
       gameState.board[fromRow][fromCol] = null;
+      
+      // Handle castling - move the rook too
+      // Castling is detected when king moves 2 squares horizontally
+      if (piece && piece.toLowerCase() === 'k' && Math.abs(toCol - fromCol) === 2) {
+        const isKingside = toCol > fromCol;
+        const rookFromCol = isKingside ? 7 : 0;
+        const rookToCol = isKingside ? toCol - 1 : toCol + 1;
+        const rook = gameState.board[fromRow][rookFromCol];
+        gameState.board[fromRow][rookToCol] = rook;
+        gameState.board[fromRow][rookFromCol] = null;
+      }
       
       gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
       gameState.moveHistory.push({
