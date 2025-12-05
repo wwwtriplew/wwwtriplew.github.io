@@ -350,7 +350,8 @@
       playerColor: 'white',
       flipped: false,
       lastMove: null,
-      pendingPromotion: null
+      pendingPromotion: null,
+      gameOver: false
     };
 
     // Initialize board
@@ -446,7 +447,7 @@
 
     // Handle square click
     function handleSquareClick(e) {
-      if (!gameState.isPlayerTurn) return;
+      if (!gameState.isPlayerTurn || gameState.gameOver) return;
       
       const square = e.currentTarget;
       const row = parseInt(square.dataset.row);
@@ -455,21 +456,13 @@
       const displayCol = gameState.flipped ? 7 - col : col;
       const piece = gameState.board[displayRow][displayCol];
       
-      console.log(`[CLICK] Square clicked: dataset=[${row},${col}], display=[${displayRow},${displayCol}], piece='${piece}'`);
-      
       // If a piece is selected and this is a legal move
       if (gameState.selectedSquare) {
-        console.log(`[CLICK] Piece selected at [${gameState.selectedSquare}], checking if [${displayRow},${displayCol}] is legal`);
-        console.log(`[CLICK] Legal moves:`, gameState.legalMoves);
-        
         const isLegalMove = gameState.legalMoves.some(
           move => move[0] === displayRow && move[1] === displayCol
         );
         
-        console.log(`[CLICK] Is legal move: ${isLegalMove}`);
-        
         if (isLegalMove) {
-          console.log(`[CLICK] ✓ Making move from [${gameState.selectedSquare}] to [${displayRow},${displayCol}]`);
           makeMove(gameState.selectedSquare, [displayRow, displayCol]);
           return;
         }
@@ -535,11 +528,6 @@
       const isWhite = piece === piece.toUpperCase();
       const type = piece.toLowerCase();
       
-      // Debug: log when calculating moves for king
-      if (type === 'k') {
-        console.log(`[KING] Calculating moves for ${piece} at [${row}, ${col}]`);
-      }
-      
       // Basic move generation (simplified)
       switch(type) {
         case 'p':
@@ -600,10 +588,6 @@
           // White king on e1 (row 7, col 4), Black king on e8 (row 0, col 4)
           const isOnStartSquare = (isWhite && row === 7 && col === 4) || (!isWhite && row === 0 && col === 4);
           
-          if (type === 'k') {
-            console.log(`[KING] isOnStartSquare: ${isOnStartSquare} (isWhite=${isWhite}, row=${row}, col=${col})`);
-          }
-          
           if (isOnStartSquare) {
             const baseRow = isWhite ? 7 : 0;
             
@@ -615,14 +599,8 @@
                 (kingsideRook === kingsideRook.toUpperCase()) === isWhite;
             const kingsidePathClear = !gameState.board[baseRow][5] && !gameState.board[baseRow][6];
             
-            console.log(`[KING] Kingside: rook='${kingsideRook}', rookCorrect=${kingsideRookIsCorrectColor}, pathClear=${kingsidePathClear}`);
-            console.log(`[KING] Kingside squares: f=[${baseRow},5]='${gameState.board[baseRow][5]}', g=[${baseRow},6]='${gameState.board[baseRow][6]}'`);
-            
             if (kingsideRookIsCorrectColor && kingsidePathClear) {
-              console.log(`[KING] ✓✓✓ Adding kingside castle to [${baseRow}, 6]`);
               moves.push([baseRow, 6]); // King to g-file (col 6)
-            } else {
-              console.log(`[KING] ✗ Kingside castle NOT added`);
             }
             
             // Queenside castling (king moves to c-file, col 2)
@@ -633,19 +611,9 @@
                 (queensideRook === queensideRook.toUpperCase()) === isWhite;
             const queensidePathClear = !gameState.board[baseRow][1] && !gameState.board[baseRow][2] && !gameState.board[baseRow][3];
             
-            console.log(`[KING] Queenside: rook='${queensideRook}', rookCorrect=${queensideRookIsCorrectColor}, pathClear=${queensidePathClear}`);
-            console.log(`[KING] Queenside squares: b=[${baseRow},1]='${gameState.board[baseRow][1]}', c=[${baseRow},2]='${gameState.board[baseRow][2]}', d=[${baseRow},3]='${gameState.board[baseRow][3]}'`);
-            
             if (queensideRookIsCorrectColor && queensidePathClear) {
-              console.log(`[KING] ✓✓✓ Adding queenside castle to [${baseRow}, 2]`);
               moves.push([baseRow, 2]); // King to c-file (col 2)
-            } else {
-              console.log(`[KING] ✗ Queenside castle NOT added`);
             }
-          }
-          
-          if (type === 'k') {
-            console.log(`[KING] Total moves for king: ${moves.length}`, moves);
           }
           
           break;
@@ -738,23 +706,40 @@
       
       const finalPiece = promotionPiece || piece;
       
-      console.log(`[MOVE] executeMoveInternal: ${piece} from [${fromRow},${fromCol}] to [${toRow},${toCol}]`);
-      
       gameState.board[toRow][toCol] = finalPiece;
       gameState.board[fromRow][fromCol] = null;
       
+      // Check if king was captured (game over - this shouldn't happen in legal chess)
+      if (captured && captured.toLowerCase() === 'k') {
+        gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
+        gameState.moveHistory.push({
+          from: [fromRow, fromCol],
+          to: [toRow, toCol],
+          piece: finalPiece,
+          captured,
+          fen: boardToFEN()
+        });
+        
+        gameState.gameOver = true;
+        deselectSquare();
+        renderBoard();
+        updateMoveList();
+        updateGameInfo();
+        
+        const winner = captured === 'K' ? 'Black' : 'White';
+        updateStatus(`Game Over - ${winner} wins by capturing the king!`, false);
+        alert(`Game Over! ${winner} wins!\n\nThe ${captured === 'K' ? 'White' : 'Black'} king was captured.`);
+        return;
+      }
+      
       // Handle castling - move the rook too
       if (piece && piece.toLowerCase() === 'k' && Math.abs(toCol - fromCol) === 2) {
-        console.log(`[CASTLE] Detected castling move!`);
         const isKingside = toCol > fromCol;
         const rookFromCol = isKingside ? 7 : 0;
         const rookToCol = isKingside ? toCol - 1 : toCol + 1;
         const rook = gameState.board[fromRow][rookFromCol];
-        console.log(`[CASTLE] ${isKingside ? 'Kingside' : 'Queenside'}: Moving rook from [${fromRow},${rookFromCol}] to [${fromRow},${rookToCol}]`);
-        console.log(`[CASTLE] Rook piece: '${rook}'`);
         gameState.board[fromRow][rookToCol] = rook;
         gameState.board[fromRow][rookFromCol] = null;
-        console.log(`[CASTLE] After castling, row ${fromRow}:`, gameState.board[fromRow]);
       }
       
       gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
@@ -789,7 +774,9 @@
         
         const elapsed = Date.now() - startTime;
         console.log(`Engine responded in ${elapsed}ms`);
-        if (result.success) {
+        
+        // Validate response has a valid move
+        if (result.success && result.move && result.move.length >= 4) {
           executeEngineMove(result.move, result.promotion);
           
           // Convert centipawns to pawns (divide by 100)
@@ -806,11 +793,11 @@
             console.log(`Principal Variation: ${result.pv}`);
           }
         } else {
-          throw new Error(result.error || 'Engine failed to return a move');
+          throw new Error(result.error || 'Engine failed to return a valid move');
         }
       } catch (error) {
         console.error('Engine error:', error);
-        updateStatus(`⚠ ${error.message || 'Engine error'} - Your turn`, false);
+        updateStatus(`⚠ Engine error: ${error.message || 'Unknown error'} - Your turn`, false);
         gameState.isPlayerTurn = true;
         renderBoard();
       }
@@ -839,6 +826,28 @@
       
       gameState.board[toRow][toCol] = piece;
       gameState.board[fromRow][fromCol] = null;
+      
+      // Check if engine captured the player's king (game over)
+      if (captured && captured.toLowerCase() === 'k') {
+        gameState.lastMove = [[fromRow, fromCol], [toRow, toCol]];
+        gameState.moveHistory.push({
+          from: [fromRow, fromCol],
+          to: [toRow, toCol],
+          piece,
+          captured,
+          fen: boardToFEN()
+        });
+        
+        gameState.gameOver = true;
+        renderBoard();
+        updateMoveList();
+        updateGameInfo();
+        
+        const winner = captured === 'K' ? 'Black' : 'White';
+        updateStatus(`Game Over - ${winner} wins by capturing the king!`, false);
+        alert(`Game Over! ${winner} wins!\n\nThe ${captured === 'K' ? 'White' : 'Black'} king was captured.`);
+        return;
+      }
       
       // Handle castling - move the rook too
       // Castling is detected when king moves 2 squares horizontally
@@ -1051,7 +1060,8 @@
         playerColor: gameState.playerColor,
         flipped: gameState.flipped,
         lastMove: null,
-        pendingPromotion: null
+        pendingPromotion: null,
+        gameOver: false
       };
       
       hidePromotionModal();
