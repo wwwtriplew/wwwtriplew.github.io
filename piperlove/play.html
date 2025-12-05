@@ -351,7 +351,13 @@
       flipped: false,
       lastMove: null,
       pendingPromotion: null,
-      gameOver: false
+      gameOver: false,
+      castlingRights: {
+        whiteKingside: true,
+        whiteQueenside: true,
+        blackKingside: true,
+        blackQueenside: true
+      }
     };
 
     // Initialize board
@@ -706,6 +712,30 @@
       
       const finalPiece = promotionPiece || piece;
       
+      // Update castling rights when king or rooks move
+      if (piece === 'K') {
+        gameState.castlingRights.whiteKingside = false;
+        gameState.castlingRights.whiteQueenside = false;
+      } else if (piece === 'k') {
+        gameState.castlingRights.blackKingside = false;
+        gameState.castlingRights.blackQueenside = false;
+      } else if (piece === 'R') {
+        if (fromRow === 7 && fromCol === 7) gameState.castlingRights.whiteKingside = false;
+        if (fromRow === 7 && fromCol === 0) gameState.castlingRights.whiteQueenside = false;
+      } else if (piece === 'r') {
+        if (fromRow === 0 && fromCol === 7) gameState.castlingRights.blackKingside = false;
+        if (fromRow === 0 && fromCol === 0) gameState.castlingRights.blackQueenside = false;
+      }
+      
+      // Update castling rights when rooks are captured
+      if (captured === 'R') {
+        if (toRow === 7 && toCol === 7) gameState.castlingRights.whiteKingside = false;
+        if (toRow === 7 && toCol === 0) gameState.castlingRights.whiteQueenside = false;
+      } else if (captured === 'r') {
+        if (toRow === 0 && toCol === 7) gameState.castlingRights.blackKingside = false;
+        if (toRow === 0 && toCol === 0) gameState.castlingRights.blackQueenside = false;
+      }
+      
       gameState.board[toRow][toCol] = finalPiece;
       gameState.board[fromRow][fromCol] = null;
       
@@ -717,7 +747,8 @@
           to: [toRow, toCol],
           piece: finalPiece,
           captured,
-          fen: boardToFEN()
+          fen: boardToFEN(),
+          castlingRights: { ...gameState.castlingRights }
         });
         
         gameState.gameOver = true;
@@ -748,7 +779,8 @@
         to: [toRow, toCol],
         piece: finalPiece,
         captured,
-        fen: boardToFEN()
+        fen: boardToFEN(),
+        castlingRights: { ...gameState.castlingRights }
       });
       
       deselectSquare();
@@ -816,7 +848,53 @@
       const toCol = toCoords.col;
       
       let piece = gameState.board[fromRow][fromCol];
+      
+      // CRITICAL: Validate that source square has a piece
+      if (!piece) {
+        console.error(`❌ INVALID ENGINE MOVE: ${uciMove} - Source square ${parsed.from} is empty!`);
+        console.error(`Board state:`, gameState.board);
+        console.error(`FEN:`, boardToFEN());
+        updateStatus(`⚠ Engine returned invalid move (${uciMove}) - Your turn`, false);
+        gameState.isPlayerTurn = true;
+        renderBoard();
+        return;
+      }
+      
+      // CRITICAL: Validate piece belongs to engine (Black)
+      if (piece === piece.toUpperCase()) {
+        console.error(`❌ INVALID ENGINE MOVE: ${uciMove} - Trying to move White piece '${piece}'!`);
+        console.error(`Board state:`, gameState.board);
+        updateStatus(`⚠ Engine tried to move your piece - Your turn`, false);
+        gameState.isPlayerTurn = true;
+        renderBoard();
+        return;
+      }
+      
       const captured = gameState.board[toRow][toCol];
+      
+      // Update castling rights when king or rooks move
+      if (piece === 'K') {
+        gameState.castlingRights.whiteKingside = false;
+        gameState.castlingRights.whiteQueenside = false;
+      } else if (piece === 'k') {
+        gameState.castlingRights.blackKingside = false;
+        gameState.castlingRights.blackQueenside = false;
+      } else if (piece === 'R') {
+        if (fromRow === 7 && fromCol === 7) gameState.castlingRights.whiteKingside = false;
+        if (fromRow === 7 && fromCol === 0) gameState.castlingRights.whiteQueenside = false;
+      } else if (piece === 'r') {
+        if (fromRow === 0 && fromCol === 7) gameState.castlingRights.blackKingside = false;
+        if (fromRow === 0 && fromCol === 0) gameState.castlingRights.blackQueenside = false;
+      }
+      
+      // Update castling rights when rooks are captured
+      if (captured === 'R') {
+        if (toRow === 7 && toCol === 7) gameState.castlingRights.whiteKingside = false;
+        if (toRow === 7 && toCol === 0) gameState.castlingRights.whiteQueenside = false;
+      } else if (captured === 'r') {
+        if (toRow === 0 && toCol === 7) gameState.castlingRights.blackKingside = false;
+        if (toRow === 0 && toCol === 0) gameState.castlingRights.blackQueenside = false;
+      }
       
       // Handle promotion if present in UCI move
       if (parsed.promotion) {
@@ -835,7 +913,8 @@
           to: [toRow, toCol],
           piece,
           captured,
-          fen: boardToFEN()
+          fen: boardToFEN(),
+          castlingRights: { ...gameState.castlingRights }
         });
         
         gameState.gameOver = true;
@@ -866,7 +945,8 @@
         to: [toRow, toCol],
         piece,
         captured,
-        fen: boardToFEN()
+        fen: boardToFEN(),
+        castlingRights: { ...gameState.castlingRights }
       });
       
       renderBoard();
@@ -905,8 +985,41 @@
       // Determine whose turn it is based on move history
       const turn = gameState.moveHistory.length % 2 === 0 ? 'w' : 'b';
       
-      // Simplified castling rights (would need proper tracking for production)
-      fen += ` ${turn} KQkq - 0 ${Math.floor(gameState.moveHistory.length / 2) + 1}`;
+      // Calculate castling rights based on piece positions and movement tracking
+      let castling = '';
+      
+      // White kingside castling (K) - king on e1, rook on h1, both haven't moved
+      if (gameState.castlingRights.whiteKingside && 
+          gameState.board[7][4] === 'K' && 
+          gameState.board[7][7] === 'R') {
+        castling += 'K';
+      }
+      
+      // White queenside castling (Q) - king on e1, rook on a1, both haven't moved
+      if (gameState.castlingRights.whiteQueenside && 
+          gameState.board[7][4] === 'K' && 
+          gameState.board[7][0] === 'R') {
+        castling += 'Q';
+      }
+      
+      // Black kingside castling (k) - king on e8, rook on h8, both haven't moved
+      if (gameState.castlingRights.blackKingside && 
+          gameState.board[0][4] === 'k' && 
+          gameState.board[0][7] === 'r') {
+        castling += 'k';
+      }
+      
+      // Black queenside castling (q) - king on e8, rook on a8, both haven't moved
+      if (gameState.castlingRights.blackQueenside && 
+          gameState.board[0][4] === 'k' && 
+          gameState.board[0][0] === 'r') {
+        castling += 'q';
+      }
+      
+      // If no castling rights available
+      if (castling === '') castling = '-';
+      
+      fen += ` ${turn} ${castling} - 0 ${Math.floor(gameState.moveHistory.length / 2) + 1}`;
       return fen;
     }
 
@@ -921,20 +1034,28 @@
       const moveList = document.getElementById('moveList');
       
       if (gameState.moveHistory.length === 0) {
-        moveList.innerHTML = '<p style="text-align: center; color: var(--muted); font-size: 0.75rem;">No moves yet</p>';
+        moveList.innerHTML = '';
+        const p = document.createElement('p');
+        p.style.textAlign = 'center';
+        p.style.color = 'var(--muted)';
+        p.style.fontSize = '0.75rem';
+        p.textContent = 'No moves yet';
+        moveList.appendChild(p);
         return;
       }
       
-      let html = '';
+      moveList.innerHTML = '';
       for (let i = 0; i < gameState.moveHistory.length; i += 2) {
         const moveNum = Math.floor(i / 2) + 1;
         const white = moveToNotation(gameState.moveHistory[i]);
         const black = gameState.moveHistory[i + 1] ? moveToNotation(gameState.moveHistory[i + 1]) : '';
         
-        html += `<div class="move-item">${moveNum}. ${white} ${black}</div>`;
+        const moveItem = document.createElement('div');
+        moveItem.className = 'move-item';
+        moveItem.textContent = `${moveNum}. ${white} ${black}`;
+        moveList.appendChild(moveItem);
       }
       
-      moveList.innerHTML = html;
       moveList.scrollTop = moveList.scrollHeight;
     }
 
@@ -1061,7 +1182,13 @@
         flipped: gameState.flipped,
         lastMove: null,
         pendingPromotion: null,
-        gameOver: false
+        gameOver: false,
+        castlingRights: {
+          whiteKingside: true,
+          whiteQueenside: true,
+          blackKingside: true,
+          blackQueenside: true
+        }
       };
       
       hidePromotionModal();
@@ -1083,11 +1210,21 @@
       const lastState = gameState.moveHistory[gameState.moveHistory.length - 1];
       if (lastState) {
         parseFEN(lastState.fen);
+        // Restore castling rights from the saved state
+        gameState.castlingRights = { ...lastState.castlingRights };
       } else {
-        parseFEN(gameState.fen);
+        // Back to starting position
+        parseFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+        gameState.castlingRights = {
+          whiteKingside: true,
+          whiteQueenside: true,
+          blackKingside: true,
+          blackQueenside: true
+        };
       }
       
       gameState.isPlayerTurn = true;
+      gameState.gameOver = false;
       gameState.lastMove = lastState ? [[lastState.to[0], lastState.to[1]], [lastState.to[0], lastState.to[1]]] : null;
       
       renderBoard();
