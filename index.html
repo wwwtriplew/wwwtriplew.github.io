@@ -17,6 +17,7 @@
       <nav>
         <a href="#profile">About</a>
         <a href="#piperlove">Piperlove</a>
+        <a href="#iot-vision">IoT Vision</a>
         <a href="#future">Future</a>
       </nav>
       <a class="pill" href="s2121645@student.hpccss.edu.hk">Contact</a>
@@ -65,6 +66,55 @@
           </ul>
           <div class="panel-actions">
             <a class="btn" href="piperlove/index.html">Play Against Piperlove</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="iot-vision" class="panel reveal">
+        <img src="assets/img/bitmap-fish.png" alt="" class="section-bg-image" />
+        <img src="assets/img/bitmap-pigeon.png" alt="" class="section-corner-image section-corner-top-right" />
+        <div class="panel-content">
+          <p class="eyebrow">Real-Time Computer Vision</p>
+          <h2>JAMstack IoT Vision System</h2>
+          <p>
+            A real-time people counting system combining ESP32-CAM, OpenCV, and modern web technologies. 
+            Built with privacy-first architecture—only headcount data is stored, never raw images with faces.
+          </p>
+          
+          <div style="margin: 2rem 0; border-radius: 1rem; overflow: hidden; border: 1px solid rgba(29, 43, 36, 0.15); box-shadow: 0 20px 40px rgba(123, 150, 105, 0.2);">
+            <img src="assets/img/web.jpg" alt="JAMstack IoT Vision System in action at school event" style="width: 100%; height: auto; display: block;" />
+            <div style="padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.95); border-top: 1px solid rgba(29, 43, 36, 0.1);">
+              <p style="margin: 0; font-size: 0.85rem; color: var(--muted);">
+                <strong>First deployment:</strong> Real-time room occupancy tracking during school activities
+              </p>
+            </div>
+          </div>
+
+          <div class="grid">
+            <article style="background: rgba(255,255,255,0.6); padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(29,43,36,0.1);">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem;">🎯 Tech Stack</h3>
+              <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; color: var(--muted); line-height: 1.8;">
+                <li><strong>Hardware:</strong> ESP32-CAM with on-device processing</li>
+                <li><strong>Vision:</strong> OpenCV for real-time people detection</li>
+                <li><strong>Backend:</strong> Supabase for real-time data sync</li>
+                <li><strong>Frontend:</strong> JAMstack with Supabase.js live queries</li>
+              </ul>
+            </article>
+            <article style="background: rgba(255,255,255,0.6); padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(29,43,36,0.1);">
+              <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem;">📊 Data Pipeline</h3>
+              <p style="margin-top: 0.5rem;">
+                The system captures room occupancy data (people count, room ID, timestamp) and streams it 
+                to Supabase in real-time. Privacy-preserving by design—facial data is processed on-device 
+                and discarded immediately after counting.
+              </p>
+            </article>
+          </div>
+
+          <div style="margin-top: 1.5rem; padding: 1.25rem 1.5rem; background: linear-gradient(135deg, rgba(123, 150, 105, 0.1), rgba(176, 196, 196, 0.1)); border-radius: 1rem; border: 1px solid rgba(123, 150, 105, 0.2);">
+            <p style="margin: 0; font-size: 0.95rem;">
+              <strong>🚧 Currently developing:</strong> Analytics dashboard for historical occupancy patterns, 
+              peak-time analysis, and capacity planning insights for better event management.
+            </p>
           </div>
         </div>
       </section>
